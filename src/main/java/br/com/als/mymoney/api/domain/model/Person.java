@@ -4,6 +4,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,15 +29,19 @@ public class Person {
 	@Column
 	private Boolean active;
 
+	@Embedded
+	private Address address;
+
 	public Person() {
 		super();
 	}
 
-	public Person(Long id, String name, Boolean active) {
+	public Person(Long id, String name, Boolean active, Address address) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.active = active;
+		this.address = address;
 	}
 
 	public String getCode() {
@@ -72,6 +77,14 @@ public class Person {
 		this.active = active;
 	}
 
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -91,6 +104,7 @@ public class Person {
 
 	@Override
 	public String toString() {
-		return "Person [id=" + id + ", code=" + code + ", name=" + name + ", active=" + active + "]";
+		return "Person [id=" + id + ", code=" + code + ", name=" + name + ", active=" + active + ", address=" + address
+				+ "]";
 	}
 }

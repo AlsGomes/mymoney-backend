@@ -1,7 +1,10 @@
 package br.com.als.mymoney.api.domain.model.dto;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+import br.com.als.mymoney.api.domain.model.Address;
 
 public class PersonDTOInsert {
 
@@ -11,14 +14,18 @@ public class PersonDTOInsert {
 
 	private Boolean active;
 
+	@Valid
+	private Address address;
+
 	public PersonDTOInsert() {
 		super();
 	}
 
-	public PersonDTOInsert(String name, Boolean active) {
+	public PersonDTOInsert(String name, Boolean active, Address address) {
 		super();
 		this.name = name;
 		this.active = active;
+		this.address = address;
 	}
 
 	public String getName() {
@@ -35,5 +42,13 @@ public class PersonDTOInsert {
 
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 }

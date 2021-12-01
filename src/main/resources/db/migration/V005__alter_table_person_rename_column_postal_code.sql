@@ -1,0 +1,1 @@
+ALTER TABLE person CHANGE COLUMN postalCode postal_code VARCHAR(8) NULL;
