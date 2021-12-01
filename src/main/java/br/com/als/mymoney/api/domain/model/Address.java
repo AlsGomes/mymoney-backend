@@ -16,16 +16,16 @@ public class Address {
 	@Size(min = 1, max = 15)
 	private String num;
 
-	@Size(min = 3, max = 50)
+	@Size(min = 2, max = 50)
 	private String complement;
 
-	@Size(min = 5, max = 50)
+	@Size(min = 2, max = 50)
 	private String district;
 
 	@Size(min = 8, max = 8)
 	private String postalCode;
 
-	@Size(min = 5, max = 50)
+	@Size(min = 2, max = 50)
 	private String city;
 
 	@Size(min = 2, max = 50)
