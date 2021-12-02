@@ -2,6 +2,7 @@ set foreign_key_checks=0;
 
 TRUNCATE TABLE category;
 TRUNCATE TABLE person;
+TRUNCATE TABLE registers;
 
 set foreign_key_checks=1;
 
@@ -14,3 +15,19 @@ INSERT INTO category(code, name) VALUES ("ee1f7943-8412-42c8-9c2c-711333464fab",
 INSERT INTO person(code, name, active, street, num, complement, district, postal_Code, city, state) VALUES 
 ("aa2310d7-e159-42f9-933c-c15048588d2b",'Alisson', true, 'Rua da casa da mãe Joana', '52', 'Bloco J Apto. 12', 'Pracinha', '01234567', 'São Paulo', 'SP');
 INSERT INTO person(code, name, active) VALUES ("d757fb84-fcd2-43d8-b2d8-9be5f756938b",'Cristina', true);
+
+INSERT INTO registers (code, description, due_date, payment_date, value, obs, type, id_category, id_person) values ('9ebcbdb2-b229-4e7f-aa92-5e9b81ea5f6f', 'Salário mensal', '2017-06-10', null, 6500.00, 'Distribuição de lucros', 'INCOME', 1, 1);
+INSERT INTO registers (code, description, due_date, payment_date, value, obs, type, id_category, id_person) values ('5b3728c6-4e37-439c-8094-06274269c077', 'Bahamas', '2017-02-10', '2017-02-10', 100.32, null, 'EXPENSE', 2, 2);
+INSERT INTO registers (code, description, due_date, payment_date, value, obs, type, id_category, id_person) values ('ed8134b3-72dd-4356-8d33-7dd5a0d5afa6', 'Top Club', '2017-06-10', null, 120, null, 'INCOME', 3, 1);
+INSERT INTO registers (code, description, due_date, payment_date, value, obs, type, id_category, id_person) values ('a59dc9d4-58dd-4472-a19a-d3365de65839', 'CEMIG', '2017-02-10', '2017-02-10', 110.44, 'Geração', 'INCOME', 3, 2);
+INSERT INTO registers (code, description, due_date, payment_date, value, obs, type, id_category, id_person) values ('12c67a61-8bfb-49a7-80b1-6b5b0ea49099', 'DMAE', '2017-06-10', null, 200.30, null, 'EXPENSE', 3, 2);
+INSERT INTO registers (code, description, due_date, payment_date, value, obs, type, id_category, id_person) values ('0ac88bf6-0fa0-4b99-a1df-d6d436cc77c0', 'Extra', '2017-03-10', '2017-03-10', 1010.32, null, 'INCOME', 4, 1);
+INSERT INTO registers (code, description, due_date, payment_date, value, obs, type, id_category, id_person) values ('a29cc34f-900b-45ea-b708-f5ea870f6375', 'Bahamas', '2017-06-10', null, 500, null, 'INCOME', 1, 1);
+INSERT INTO registers (code, description, due_date, payment_date, value, obs, type, id_category, id_person) values ('97c1e4fe-e85a-4cfa-8e7a-b9ec65711e0b', 'Top Club', '2017-03-10', '2017-03-10', 400.32, null, 'EXPENSE', 4, 1);
+INSERT INTO registers (code, description, due_date, payment_date, value, obs, type, id_category, id_person) values ('53889fe9-fea7-4cbc-b915-f51732769af1', 'Despachante', '2017-06-10', null, 123.64, 'Multas', 'EXPENSE', 3, 1);
+INSERT INTO registers (code, description, due_date, payment_date, value, obs, type, id_category, id_person) values ('4cf2cab7-3890-4342-a07d-ab4a72e309d4', 'Pneus', '2017-04-10', '2017-04-10', 665.33, null, 'INCOME', 5, 2);
+INSERT INTO registers (code, description, due_date, payment_date, value, obs, type, id_category, id_person) values ('d06a6aa7-3459-42cc-a533-936357e63550', 'Café', '2017-06-10', null, 8.32, null, 'EXPENSE', 1, 2);
+INSERT INTO registers (code, description, due_date, payment_date, value, obs, type, id_category, id_person) values ('5b76158a-e18e-4078-a87a-065e485e61bf', 'Eletrônicos', '2017-04-10', '2017-04-10', 2100.32, null, 'EXPENSE', 5, 1);
+INSERT INTO registers (code, description, due_date, payment_date, value, obs, type, id_category, id_person) values ('393662e1-633f-4463-95a2-8052d2e0edd8', 'Instrumentos', '2017-06-10', null, 1040.32, null, 'EXPENSE', 4, 2);
+INSERT INTO registers (code, description, due_date, payment_date, value, obs, type, id_category, id_person) values ('2566ad4f-8e3e-4729-8f5c-16bc79312f19', 'Café', '2017-04-10', '2017-04-10', 4.32, null, 'EXPENSE', 4, 2);
+INSERT INTO registers (code, description, due_date, payment_date, value, obs, type, id_category, id_person) values ('d96523b6-22fc-4e1c-a98a-1df1f2009ca5', 'Lanche', '2017-06-10', null, 10.20, null, 'EXPENSE', 4, 1);

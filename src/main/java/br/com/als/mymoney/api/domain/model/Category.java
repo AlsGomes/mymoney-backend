@@ -3,7 +3,6 @@ package br.com.als.mymoney.api.domain.model;
 import java.util.Objects;
 import java.util.UUID;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,10 +18,7 @@ public class Category {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column
 	private String code;
-
-	@Column
 	private String name;
 
 	public Category() {

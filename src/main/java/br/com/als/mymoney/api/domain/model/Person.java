@@ -3,7 +3,6 @@ package br.com.als.mymoney.api.domain.model;
 import java.util.Objects;
 import java.util.UUID;
 
-import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,13 +19,8 @@ public class Person {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column
 	private String code;
-
-	@Column
 	private String name;
-
-	@Column
 	private Boolean active;
 
 	@Embedded

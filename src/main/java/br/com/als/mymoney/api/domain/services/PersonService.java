@@ -35,7 +35,7 @@ public class PersonService {
 		return objDTO;
 	}
 
-	private Person findByCodeOrThrowAsPerson(String code) {
+	public Person findByCodeOrThrowAsPerson(String code) {
 		if (code == null)
 			throw new ObjectNotFoundException("Pessoa não encontrada");
 
