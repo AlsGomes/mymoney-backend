@@ -10,7 +10,9 @@ import br.com.als.mymoney.api.domain.model.Register;
 
 public interface RegisterRepository extends JpaRepository<Register, Long> {
 
-	Optional<Register> findByCode(String code);
+	Optional<Register> findByCodeAndPerson(String code, Person person);
 
 	List<Register> findByPerson(Person person);
+	
+	
 }

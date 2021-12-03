@@ -24,17 +24,16 @@ public class RegisterService {
 	@Autowired
 	private PersonService personService;
 
-	public List<RegisterDTO> findAll() {
-		var list = repository.findAll();
-		List<RegisterDTO> listDTO = list.stream().map(RegisterDTO::new).collect(Collectors.toList());
-		return listDTO;
-	}
-
-	public RegisterDTO findByCodeOrThrow(String code) {
+	public RegisterDTO findByCodeOrThrow(String personCode, String code) {
 		if (code == null)
 			throw new ObjectNotFoundException("Lançamento não encontrado");
 
-		Register obj = repository.findByCode(code)
+		if (personCode == null)
+			throw new ObjectNotFoundException("Código da Pessoa inválido");
+
+		Person person = findPerson(personCode);
+
+		Register obj = repository.findByCodeAndPerson(code, person)
 				.orElseThrow(() -> new ObjectNotFoundException("Lancamento não encontrado"));
 
 		RegisterDTO objDTO = new RegisterDTO();
@@ -46,25 +45,35 @@ public class RegisterService {
 		return objDTO;
 	}
 
-	public Register findByCodeOrThrowAsRegister(String code) {
+	public Register findByCodeOrThrowAsRegister(String personCode, String code) {
 		if (code == null)
-			throw new ObjectNotFoundException("Lancamento não encontrado");
+			throw new ObjectNotFoundException("Lançamento não encontrado");
 
-		Register obj = repository.findByCode(code)
-				.orElseThrow(() -> new ObjectNotFoundException("Lançamento não encontrado"));
+		if (personCode == null)
+			throw new ObjectNotFoundException("Código da Pessoa inválido");
+
+		Person person = findPerson(personCode);
+
+		Register obj = repository.findByCodeAndPerson(code, person)
+				.orElseThrow(() -> new ObjectNotFoundException("Lancamento não encontrado"));
 
 		return obj;
 	}
 
-	public List<RegisterDTO> findByPersonOrThrow(String code) {
-		if (code == null)
+	public List<RegisterDTO> findAll(String personCode) {
+		if (personCode == null)
 			throw new ObjectNotFoundException("Código da Pessoa inválido");
 
-		Person obj = personService.findByCodeOrThrowAsPerson(code);
+		Person obj = findPerson(personCode);
 
 		List<Register> list = repository.findByPerson(obj);
 		List<RegisterDTO> listDTO = list.stream().map(RegisterDTO::new).collect(Collectors.toList());
 
 		return listDTO;
+	}
+
+	private Person findPerson(String personCode) {
+		Person obj = personService.findByCodeOrThrowAsPerson(personCode);
+		return obj;
 	}
 }

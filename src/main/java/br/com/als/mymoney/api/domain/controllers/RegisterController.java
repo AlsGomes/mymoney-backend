@@ -13,28 +13,21 @@ import br.com.als.mymoney.api.domain.model.dto.RegisterDTO;
 import br.com.als.mymoney.api.domain.services.RegisterService;
 
 @RestController
-@RequestMapping(path = "/registers")
+@RequestMapping(path = "/registers/{personCode}")
 public class RegisterController {
 
 	@Autowired
 	private RegisterService service;
 
 	@GetMapping
-	public ResponseEntity<List<RegisterDTO>> findAll() {
-		List<RegisterDTO> listDTO = service.findAll();
+	public ResponseEntity<List<RegisterDTO>> findAll(@PathVariable String personCode) {
+		List<RegisterDTO> listDTO = service.findAll(personCode);
 		return ResponseEntity.ok(listDTO);
 	}
 
 	@GetMapping(path = "/{code}")
-	public ResponseEntity<RegisterDTO> findByCode(@PathVariable String code) {
-		RegisterDTO objDTO = service.findByCodeOrThrow(code);
+	public ResponseEntity<RegisterDTO> findByCode(@PathVariable String personCode, @PathVariable String code) {
+		RegisterDTO objDTO = service.findByCodeOrThrow(personCode, code);
 		return ResponseEntity.ok(objDTO);
-	}
-
-	//TODO Trocar de controlador para usar no PersonService
-	@GetMapping(path = "/person/{code}")
-	public ResponseEntity<List<RegisterDTO>> findAllByPerson(@PathVariable String code) {
-		List<RegisterDTO> listDTO = service.findByPersonOrThrow(code);
-		return ResponseEntity.ok(listDTO);
 	}
 }
