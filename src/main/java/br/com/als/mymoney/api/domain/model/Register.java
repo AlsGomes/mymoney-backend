@@ -3,6 +3,7 @@ package br.com.als.mymoney.api.domain.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 @Entity
@@ -44,8 +46,17 @@ public class Register {
 		super();
 	}
 
-	public Register(Long id, String code, String description, LocalDate dueDate, LocalDate paymentDate,
-			BigDecimal value, String obs, RegisterType type, Category category, Person person) {
+	public Register(
+			Long id, 
+			String code, 
+			String description, 
+			LocalDate dueDate, 
+			LocalDate paymentDate,
+			BigDecimal value, 
+			String obs, 
+			RegisterType type, 
+			Category category, 
+			Person person) {
 		super();
 		this.id = id;
 		this.code = code;
@@ -58,7 +69,7 @@ public class Register {
 		this.category = category;
 		this.person = person;
 	}
-
+	
 	public Long getId() {
 		return id;
 	}
@@ -71,8 +82,9 @@ public class Register {
 		return code;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	@PrePersist
+	private void setCode() {
+		this.code = UUID.randomUUID().toString();
 	}
 
 	public String getDescription() {

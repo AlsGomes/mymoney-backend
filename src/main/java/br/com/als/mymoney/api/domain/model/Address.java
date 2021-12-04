@@ -35,7 +35,13 @@ public class Address {
 		super();
 	}
 
-	public Address(String street, String num, String complement, String district, String postalCode, String city,
+	public Address(
+			String street, 
+			String num, 
+			String complement, 
+			String district, 
+			String postalCode, 
+			String city,
 			String state) {
 		super();
 		this.street = street;
@@ -101,5 +107,11 @@ public class Address {
 
 	public void setState(String state) {
 		this.state = state;
+	}
+
+	@Override
+	public String toString() {
+		return "Address [street=" + street + ", num=" + num + ", complement=" + complement + ", district=" + district
+				+ ", postalCode=" + postalCode + ", city=" + city + ", state=" + state + "]";
 	}
 }

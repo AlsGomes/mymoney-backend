@@ -33,7 +33,7 @@ public class PersonDTOUpdate {
 		this.name = name;
 	}
 
-	public Boolean getActive() {
+	public Boolean isActive() {
 		return active;
 	}
 

@@ -30,7 +30,7 @@ public class PersonDTO {
 		super();
 		this.code = person.getCode();
 		this.name = person.getName();
-		this.active = person.getActive();
+		this.active = person.isActive();
 		this.address = person.getAddress();
 	}
 
@@ -50,7 +50,7 @@ public class PersonDTO {
 		this.code = code;
 	}
 
-	public Boolean getActive() {
+	public Boolean isActive() {
 		return active;
 	}
 

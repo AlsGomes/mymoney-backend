@@ -19,6 +19,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.als.mymoney.api.domain.services.exceptions.DomainException;
 import br.com.als.mymoney.api.domain.services.exceptions.ObjectNotFoundException;
 
 @ControllerAdvice
@@ -37,6 +38,19 @@ public class APIExceptionHandler extends ResponseEntityExceptionHandler {
 				ex.getMessage(),
 				"O recurso buscado não existe");
 
+		return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
+	}	
+
+	@ExceptionHandler(DomainException.class)
+	public ResponseEntity<?> handleDomainException(DomainException ex, WebRequest request) {
+		var status = HttpStatus.UNPROCESSABLE_ENTITY;
+				
+		StandardError error = getStandardErrorInfo(
+				status,
+				"domain-exception",
+				ex.getMessage(),
+				"Não foi possível processar sua solicitação");
+		
 		return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
 	}	
 	

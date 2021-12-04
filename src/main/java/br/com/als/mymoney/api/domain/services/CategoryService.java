@@ -19,14 +19,22 @@ public class CategoryService {
 	@Autowired
 	private CategoryRepository repository;
 
-	public CategoryDTO findByIdOrThrow(String hashId) {
-		Category obj = repository.findByCode(hashId)
+	//TODO Implementar modelMapper na classe
+	public CategoryDTO findByCodeOrThrow(String code) {
+		Category obj = repository.findByCode(code)
 				.orElseThrow(() -> new ObjectNotFoundException("Categoria não encontrada"));
 
 		CategoryDTO objDTO = new CategoryDTO();
 		BeanUtils.copyProperties(obj, objDTO);
 
 		return objDTO;
+	}
+
+	public Category findByCodeOrThrowAsCategory(String code) {
+		Category obj = repository.findByCode(code)
+				.orElseThrow(() -> new ObjectNotFoundException("Categoria não encontrada"));
+
+		return obj;
 	}
 
 	public List<CategoryDTO> findAll() {

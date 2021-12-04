@@ -1,7 +1,6 @@
 package br.com.als.mymoney.api.domain.model.dto;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -15,8 +14,8 @@ public class RegisterDTO {
 
 	private String code;
 	private String description;
-	private LocalDate dueDate;
-	private LocalDate paymentDate;
+	private String dueDate;
+	private String paymentDate;
 	private BigDecimal value;
 	private String obs;
 	private RegisterType type;
@@ -27,8 +26,16 @@ public class RegisterDTO {
 		super();
 	}
 
-	public RegisterDTO(String code, String description, LocalDate dueDate, LocalDate paymentDate, BigDecimal value,
-			String obs, RegisterType type, CategoryDTO category, PersonDTO person) {
+	public RegisterDTO(
+			String code, 
+			String description, 
+			String dueDate, 
+			String paymentDate, 
+			BigDecimal value,
+			String obs, 
+			RegisterType type, 
+			CategoryDTO category, 
+			PersonDTO person) {
 		super();
 		this.code = code;
 		this.description = description;
@@ -45,8 +52,8 @@ public class RegisterDTO {
 		super();
 		this.code = register.getCode();
 		this.description = register.getDescription();
-		this.dueDate = register.getDueDate();
-		this.paymentDate = register.getPaymentDate();
+		this.dueDate = register.getDueDate().toString();
+		this.paymentDate = register.getPaymentDate() == null ? null : register.getPaymentDate().toString();
 		this.value = register.getValue();
 		this.obs = register.getObs();
 		this.type = register.getType();
@@ -70,19 +77,19 @@ public class RegisterDTO {
 		this.description = description;
 	}
 
-	public LocalDate getDueDate() {
+	public String getDueDate() {
 		return dueDate;
 	}
 
-	public void setDueDate(LocalDate dueDate) {
+	public void setDueDate(String dueDate) {
 		this.dueDate = dueDate;
 	}
 
-	public LocalDate getPaymentDate() {
+	public String getPaymentDate() {
 		return paymentDate;
 	}
 
-	public void setPaymentDate(LocalDate paymentDate) {
+	public void setPaymentDate(String paymentDate) {
 		this.paymentDate = paymentDate;
 	}
 

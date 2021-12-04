@@ -39,7 +39,7 @@ public class CategoryController {
 
 	@GetMapping(path = "/{code}")
 	public ResponseEntity<CategoryDTO> findById(@PathVariable String code) {
-		CategoryDTO objDTO = service.findByIdOrThrow(code);
+		CategoryDTO objDTO = service.findByCodeOrThrow(code);
 		return ResponseEntity.ok(objDTO);
 	}
 
