@@ -14,6 +14,7 @@ import br.com.als.mymoney.api.domain.model.Register;
 import br.com.als.mymoney.api.domain.model.dto.RegisterDTO;
 import br.com.als.mymoney.api.domain.model.dto.RegisterDTOInsert;
 import br.com.als.mymoney.api.domain.repositories.RegisterRepository;
+import br.com.als.mymoney.api.domain.repositories.filters.RegisterFilter;
 import br.com.als.mymoney.api.domain.services.exceptions.DomainException;
 import br.com.als.mymoney.api.domain.services.exceptions.ObjectNotFoundException;
 
@@ -34,6 +35,16 @@ public class RegisterService {
 
 	@Autowired
 	private CategoryService categoryService;
+
+	private Person findPerson(String personCode) {
+		Person obj = personService.findByCodeOrThrowAsPerson(personCode);
+		return obj;
+	}
+
+	private Category findCategory(String code) {
+		Category obj = categoryService.findByCodeOrThrowAsCategory(code);
+		return obj;
+	}
 
 	public RegisterDTO findByCodeOrThrow(String personCode, String code) {
 		if (code == null)
@@ -79,21 +90,29 @@ public class RegisterService {
 		return listDTO;
 	}
 
-	private Person findPerson(String personCode) {
-		Person obj = personService.findByCodeOrThrowAsPerson(personCode);
-		return obj;
-	}
+	public List<RegisterDTO> search(String personCode, RegisterFilter filter) {
+		if (personCode == null)
+			throw new ObjectNotFoundException("Código da Pessoa inválido");
+		
+		if(!filter.isValidDate())
+			throw new DomainException("Vencimento Até, precisa ser maior do que Vencimento De");
+		
+		var person = findPerson(personCode);
 
-	private Category findCategory(String code) {
-		Category obj = categoryService.findByCodeOrThrowAsCategory(code);
-		return obj;
+		filter.setPersonId(person.getId());
+
+		List<Register> list = repository.search(filter);
+		List<RegisterDTO> listDTO = list.stream().map(RegisterDTO::new).collect(Collectors.toList());
+
+		return listDTO;
 	}
 
 	public RegisterDTO saveNew(String personCode, RegisterDTOInsert objDTO) {
 		var person = findPerson(personCode);
 		if (!person.isActive())
 			throw new DomainException(
-					String.format("Não é possível cadastrar registros, pois, %s está inativo(a)", person.getName()), null);
+					String.format("Não é possível cadastrar registros, pois, %s está inativo(a)", person.getName()),
+					null);
 
 		var category = findCategory(objDTO.getCategory().getCode());
 		var newRegister = assembler.toRegister(objDTO);

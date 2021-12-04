@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.als.mymoney.api.domain.model.dto.RegisterDTO;
 import br.com.als.mymoney.api.domain.model.dto.RegisterDTOInsert;
+import br.com.als.mymoney.api.domain.repositories.filters.RegisterFilter;
 import br.com.als.mymoney.api.domain.services.RegisterService;
 import br.com.als.mymoney.api.events.ResourceCreatedEvent;
 
@@ -38,10 +39,22 @@ public class RegisterController {
 	}
 
 	@GetMapping(path = "/{code}")
-	public ResponseEntity<RegisterDTO> findByCode(@PathVariable String personCode, @PathVariable String code) {
+	public ResponseEntity<RegisterDTO> findByCode(
+			@PathVariable String personCode, 
+			@PathVariable String code) {
+		
 		RegisterDTO objDTO = service.findByCodeOrThrow(personCode, code);
 		return ResponseEntity.ok(objDTO);
 	}
+	
+	@GetMapping(path = "/filter")
+	public ResponseEntity<List<RegisterDTO>> search(
+			@PathVariable String personCode, 
+			RegisterFilter filter) {
+		
+		List<RegisterDTO> listDTO = service.search(personCode, filter);
+		return ResponseEntity.ok(listDTO);
+	}	
 
 	@PostMapping
 	public ResponseEntity<RegisterDTO> saveNew(
