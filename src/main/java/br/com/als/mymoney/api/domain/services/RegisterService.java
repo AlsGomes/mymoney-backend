@@ -93,10 +93,10 @@ public class RegisterService {
 	public List<RegisterDTO> search(String personCode, RegisterFilter filter) {
 		if (personCode == null)
 			throw new ObjectNotFoundException("Código da Pessoa inválido");
-		
-		if(!filter.isValidDate())
+
+		if (!filter.isValidDate())
 			throw new DomainException("Vencimento Até, precisa ser maior do que Vencimento De");
-		
+
 		var person = findPerson(personCode);
 
 		filter.setPersonId(person.getId());
@@ -123,5 +123,10 @@ public class RegisterService {
 
 		var registerDTO = new RegisterDTO(newRegister);
 		return registerDTO;
+	}
+
+	public void delete(String personCode, String code) {
+		var register = findByCodeOrThrowAsRegister(personCode, code);
+		repository.delete(register);
 	}
 }
