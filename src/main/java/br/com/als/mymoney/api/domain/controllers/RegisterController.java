@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.als.mymoney.api.domain.controllers.utils.SimplePage;
 import br.com.als.mymoney.api.domain.model.dto.RegisterDTO;
 import br.com.als.mymoney.api.domain.model.dto.RegisterDTOInsert;
 import br.com.als.mymoney.api.domain.repositories.filters.RegisterFilter;
@@ -49,11 +51,12 @@ public class RegisterController {
 	}
 
 	@GetMapping(path = "/filter")
-	public ResponseEntity<List<RegisterDTO>> search(
+	public ResponseEntity<SimplePage<RegisterDTO>> search(
 			@PathVariable String personCode, 
-			RegisterFilter filter) {
+			RegisterFilter filter,
+			Pageable pageable) {
 
-		List<RegisterDTO> listDTO = service.search(personCode, filter);
+		SimplePage<RegisterDTO> listDTO = service.search(personCode, filter, pageable);
 		return ResponseEntity.ok(listDTO);
 	}
 

@@ -4,9 +4,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.als.mymoney.api.domain.assemblers.RegisterAssembler;
+import br.com.als.mymoney.api.domain.controllers.utils.SimplePage;
 import br.com.als.mymoney.api.domain.disassemblers.RegisterDisassembler;
 import br.com.als.mymoney.api.domain.model.Category;
 import br.com.als.mymoney.api.domain.model.Person;
@@ -90,7 +93,7 @@ public class RegisterService {
 		return listDTO;
 	}
 
-	public List<RegisterDTO> search(String personCode, RegisterFilter filter) {
+	public SimplePage<RegisterDTO> search(String personCode, RegisterFilter filter, Pageable pageable) {
 		if (personCode == null)
 			throw new ObjectNotFoundException("Código da Pessoa inválido");
 
@@ -101,10 +104,11 @@ public class RegisterService {
 
 		filter.setPersonId(person.getId());
 
-		List<Register> list = repository.search(filter);
-		List<RegisterDTO> listDTO = list.stream().map(RegisterDTO::new).collect(Collectors.toList());
+		Page<Register> list = repository.search(filter, pageable);
+		Page<RegisterDTO> listDTO = list.map(RegisterDTO::new);
+		SimplePage<RegisterDTO> simplePage = new SimplePage<>(listDTO); 
 
-		return listDTO;
+		return simplePage;
 	}
 
 	public RegisterDTO saveNew(String personCode, RegisterDTOInsert objDTO) {

@@ -11,6 +11,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+
 import br.com.als.mymoney.api.domain.model.Register;
 import br.com.als.mymoney.api.domain.repositories.filters.RegisterFilter;
 
@@ -20,7 +24,7 @@ public class RegisterRepositoryImpl implements RegisterRepositoryQuery {
 	private EntityManager manager;
 
 	@Override
-	public List<Register> search(RegisterFilter filter) {
+	public Page<Register> search(RegisterFilter filter, Pageable pageable) {
 
 		CriteriaBuilder builder = manager.getCriteriaBuilder();
 		CriteriaQuery<Register> criteria = builder.createQuery(Register.class);
@@ -31,7 +35,9 @@ public class RegisterRepositoryImpl implements RegisterRepositoryQuery {
 		criteria.where(predicates);
 
 		TypedQuery<Register> query = manager.createQuery(criteria);
-		return query.getResultList();
+		addPaginationConstraints(query, pageable);
+
+		return new PageImpl<>(query.getResultList(), pageable, totalRecords(filter));
 	}
 
 	private Predicate[] createPredicates(Root<Register> root, CriteriaBuilder builder, RegisterFilter filter) {
@@ -52,6 +58,28 @@ public class RegisterRepositoryImpl implements RegisterRepositoryQuery {
 		}
 
 		return predicates.toArray(new Predicate[predicates.size()]);
+	}
+
+	private void addPaginationConstraints(TypedQuery<Register> query, Pageable pageable) {
+		int actualPage = pageable.getPageNumber();
+		int pageSize = pageable.getPageSize();
+		int firstResult = actualPage * pageSize;
+
+		query.setFirstResult(firstResult);
+		query.setMaxResults(pageSize);
+	}
+
+	private Long totalRecords(RegisterFilter filter) {
+		var builder = manager.getCriteriaBuilder();
+		var criteria = builder.createQuery(Long.class);
+		var root = criteria.from(Register.class);
+
+		var predicates = createPredicates(root, builder, filter);
+		criteria.where(predicates);
+
+		criteria.select(builder.count(root));
+
+		return manager.createQuery(criteria).getSingleResult();
 	}
 
 }
