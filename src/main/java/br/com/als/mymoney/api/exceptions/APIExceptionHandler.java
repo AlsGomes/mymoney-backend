@@ -1,5 +1,6 @@
 package br.com.als.mymoney.api.exceptions;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,6 +51,19 @@ public class APIExceptionHandler extends ResponseEntityExceptionHandler {
 				"domain-exception",
 				ex.getMessage(),
 				"Não foi possível processar sua solicitação");
+		
+		return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
+	}
+	
+	@ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+	public ResponseEntity<?> handleViolationConstraintException(SQLIntegrityConstraintViolationException ex, WebRequest request) {
+		var status = HttpStatus.CONFLICT;
+		
+		StandardError error = getStandardErrorInfo(
+				status,
+				"violation-constraint-exception",
+				ex.getMessage(),
+				"O recurso solicitado para exclusão/alteração não pode ser executado, pois, já está em uso");
 		
 		return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
 	}	
