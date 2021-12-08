@@ -6,7 +6,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 public class RegisterFilter {
 
-	private Long personId;
 	private String description;
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -21,14 +20,6 @@ public class RegisterFilter {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public Long getPersonId() {
-		return personId;
-	}
-
-	public void setPersonId(Long personId) {
-		this.personId = personId;
 	}
 
 	public LocalDate getDueDateUntil() {

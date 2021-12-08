@@ -46,13 +46,21 @@ public class RegisterDTOInsert {
 	@Valid
 	private CategoryDTOCodeNonNull category;
 
-	public RegisterDTOInsert() {
-		super();
-	}
+	@NotNull
+	@Valid
+	private PersonDTOCodeNonNull person;
 
-	public RegisterDTOInsert(String description, String dueDate, String paymentDate, BigDecimal value, String obs,
-			String type, CategoryDTOCodeNonNull category) {
-		super();
+	public RegisterDTOInsert() {}
+
+	public RegisterDTOInsert(
+			String description,
+			String dueDate,
+			String paymentDate,
+			BigDecimal value,
+			String obs,
+			String type,
+			CategoryDTOCodeNonNull category,
+			PersonDTOCodeNonNull person) {		
 		this.description = description;
 		this.dueDate = dueDate;
 		this.paymentDate = paymentDate;
@@ -60,6 +68,7 @@ public class RegisterDTOInsert {
 		this.obs = obs;
 		this.type = type;
 		this.category = category;
+		this.person = person;
 	}
 
 	public String getDescription() {
@@ -116,5 +125,13 @@ public class RegisterDTOInsert {
 
 	public void setCategory(CategoryDTOCodeNonNull category) {
 		this.category = category;
+	}
+
+	public PersonDTOCodeNonNull getPerson() {
+		return person;
+	}
+
+	public void setPerson(PersonDTOCodeNonNull person) {
+		this.person = person;
 	}
 }

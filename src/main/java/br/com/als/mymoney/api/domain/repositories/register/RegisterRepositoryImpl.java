@@ -41,9 +41,7 @@ public class RegisterRepositoryImpl implements RegisterRepositoryQuery {
 	}
 
 	private Predicate[] createPredicates(Root<Register> root, CriteriaBuilder builder, RegisterFilter filter) {
-		List<Predicate> predicates = new ArrayList<>();
-
-		predicates.add(builder.equal(root.get("person"), filter.getPersonId()));
+		List<Predicate> predicates = new ArrayList<>();	
 
 		if (filter.getDescription() != null && !filter.getDescription().trim().isEmpty()) {
 			predicates.add(builder.like(root.get("description"), "%" + filter.getDescription() + "%"));

@@ -49,16 +49,11 @@ public class RegisterService {
 		return obj;
 	}
 
-	public RegisterDTO findByCodeOrThrow(String personCode, String code) {
+	public RegisterDTO findByCodeOrThrow(String code) {
 		if (code == null)
-			throw new ObjectNotFoundException("Lançamento não encontrado");
+			throw new ObjectNotFoundException("Lançamento não encontrado");		
 
-		if (personCode == null)
-			throw new ObjectNotFoundException("Código da Pessoa inválido");
-
-		Person person = findPerson(personCode);
-
-		Register obj = repository.findByCodeAndPerson(code, person)
+		Register obj = repository.findByCode(code)
 				.orElseThrow(() -> new ObjectNotFoundException("Lancamento não encontrado"));
 
 		RegisterDTO objDTO = disassembler.toRegisterDTO(obj);
@@ -66,43 +61,26 @@ public class RegisterService {
 		return objDTO;
 	}
 
-	public Register findByCodeOrThrowAsRegister(String personCode, String code) {
+	public Register findByCodeOrThrowAsRegister(String code) {
 		if (code == null)
 			throw new ObjectNotFoundException("Lançamento não encontrado");
-
-		if (personCode == null)
-			throw new ObjectNotFoundException("Código da Pessoa inválido");
-
-		Person person = findPerson(personCode);
-
-		Register obj = repository.findByCodeAndPerson(code, person)
+		
+		Register obj = repository.findByCode(code)
 				.orElseThrow(() -> new ObjectNotFoundException("Lancamento não encontrado"));
 
 		return obj;
 	}
 
-	public List<RegisterDTO> findAll(String personCode) {
-		if (personCode == null)
-			throw new ObjectNotFoundException("Código da Pessoa inválido");
-
-		Person obj = findPerson(personCode);
-
-		List<Register> list = repository.findByPerson(obj);
+	public List<RegisterDTO> findAll() {
+		List<Register> list = repository.findAll();
 		List<RegisterDTO> listDTO = list.stream().map(RegisterDTO::new).collect(Collectors.toList());
 
 		return listDTO;
 	}
 
-	public SimplePage<RegisterDTO> search(String personCode, RegisterFilter filter, Pageable pageable) {
-		if (personCode == null)
-			throw new ObjectNotFoundException("Código da Pessoa inválido");
-
+	public SimplePage<RegisterDTO> search(RegisterFilter filter, Pageable pageable) {
 		if (!filter.isValidDate())
 			throw new DomainException("Vencimento Até, precisa ser maior do que Vencimento De");
-
-		var person = findPerson(personCode);
-
-		filter.setPersonId(person.getId());
 
 		Page<Register> list = repository.search(filter, pageable);
 		Page<RegisterDTO> listDTO = list.map(RegisterDTO::new);
@@ -111,8 +89,8 @@ public class RegisterService {
 		return simplePage;
 	}
 
-	public RegisterDTO saveNew(String personCode, RegisterDTOInsert objDTO) {
-		var person = findPerson(personCode);
+	public RegisterDTO saveNew(RegisterDTOInsert objDTO) {
+		var person = findPerson(objDTO.getPerson().getCode());
 		if (!person.isActive())
 			throw new DomainException(
 					String.format("Não é possível cadastrar registros, pois, %s está inativo(a)", person.getName()),
@@ -129,8 +107,8 @@ public class RegisterService {
 		return registerDTO;
 	}
 
-	public void delete(String personCode, String code) {
-		var register = findByCodeOrThrowAsRegister(personCode, code);
+	public void delete(String code) {
+		var register = findByCodeOrThrowAsRegister(code);
 		repository.delete(register);
 	}
 }

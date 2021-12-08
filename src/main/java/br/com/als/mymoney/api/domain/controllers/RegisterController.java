@@ -26,7 +26,7 @@ import br.com.als.mymoney.api.domain.services.RegisterService;
 import br.com.als.mymoney.api.events.ResourceCreatedEvent;
 
 @RestController
-@RequestMapping(path = "/registers/{personCode}")
+@RequestMapping(path = "/registers")
 public class RegisterController {
 
 	@Autowired
@@ -36,47 +36,39 @@ public class RegisterController {
 	ApplicationEventPublisher eventPublisher;
 
 	@GetMapping
-	public ResponseEntity<List<RegisterDTO>> findAll(@PathVariable String personCode) {
-		List<RegisterDTO> listDTO = service.findAll(personCode);
+	public ResponseEntity<List<RegisterDTO>> findAll() {
+		List<RegisterDTO> listDTO = service.findAll();
 		return ResponseEntity.ok(listDTO);
 	}
 
 	@GetMapping(path = "/{code}")
-	public ResponseEntity<RegisterDTO> findByCode(
-			@PathVariable String personCode, 
-			@PathVariable String code) {
-
-		RegisterDTO objDTO = service.findByCodeOrThrow(personCode, code);
+	public ResponseEntity<RegisterDTO> findByCode(@PathVariable String code) {
+		RegisterDTO objDTO = service.findByCodeOrThrow(code);
 		return ResponseEntity.ok(objDTO);
 	}
 
 	@GetMapping(path = "/filter")
-	public ResponseEntity<SimplePage<RegisterDTO>> search(
-			@PathVariable String personCode, 
+	public ResponseEntity<SimplePage<RegisterDTO>> search(			
 			RegisterFilter filter,
 			Pageable pageable) {
 
-		SimplePage<RegisterDTO> listDTO = service.search(personCode, filter, pageable);
+		SimplePage<RegisterDTO> listDTO = service.search(filter, pageable);
 		return ResponseEntity.ok(listDTO);
 	}
 
 	@PostMapping
-	public ResponseEntity<RegisterDTO> saveNew(
-			@PathVariable String personCode,
+	public ResponseEntity<RegisterDTO> saveNew(			
 			@RequestBody @Valid RegisterDTOInsert objDTO, 
 			HttpServletResponse response) {
 
-		RegisterDTO objNew = service.saveNew(personCode, objDTO);
+		RegisterDTO objNew = service.saveNew(objDTO);
 		eventPublisher.publishEvent(new ResourceCreatedEvent(this, response, objNew.getCode()));
 		return ResponseEntity.status(HttpStatus.CREATED).body(objNew);
 	}
 
 	@DeleteMapping(path = "/{code}")
-	public ResponseEntity<Void> delete(
-			@PathVariable String personCode, 
-			@PathVariable String code) {
-		
-		service.delete(personCode, code);
+	public ResponseEntity<Void> delete(@PathVariable String code) {		
+		service.delete(code);
 		return ResponseEntity.noContent().build();
 	}
 }
