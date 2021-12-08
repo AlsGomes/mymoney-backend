@@ -1,5 +1,7 @@
 package br.com.als.mymoney.api.core.config.security;
 
+import javax.crypto.spec.SecretKeySpec;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,6 +13,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 
 @Configuration
 @EnableWebSecurity
@@ -24,7 +28,7 @@ public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 				.csrf().disable()
-			.oauth2ResourceServer().opaqueToken();
+			.oauth2ResourceServer().jwt();
 	}
 	
 	@Override
@@ -35,6 +39,12 @@ public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
 			.roles("ADMIN");
 	}
 
+	@Bean
+	public JwtDecoder jwtDecoder() {
+		var secretKey = new SecretKeySpec("2f45ade2d9c22192ac38c66efbb19ac66a8f62f9822da769f979aa735711d4ac".getBytes(), "HmacSHA256");
+		return NimbusJwtDecoder.withSecretKey(secretKey).build();
+	}
+	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
