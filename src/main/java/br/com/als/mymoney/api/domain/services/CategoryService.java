@@ -18,8 +18,7 @@ public class CategoryService {
 
 	@Autowired
 	private CategoryRepository repository;
-
-	//TODO Implementar modelMapper na classe
+	
 	public CategoryDTO findByCodeOrThrow(String code) {
 		Category obj = repository.findByCode(code)
 				.orElseThrow(() -> new ObjectNotFoundException("Categoria não encontrada"));
