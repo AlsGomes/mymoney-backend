@@ -3,6 +3,9 @@ set foreign_key_checks=0;
 TRUNCATE TABLE category;
 TRUNCATE TABLE person;
 TRUNCATE TABLE registers;
+TRUNCATE TABLE user;
+TRUNCATE TABLE permission;
+TRUNCATE TABLE user_permission;
 
 set foreign_key_checks=1;
 
@@ -31,3 +34,32 @@ INSERT INTO registers (code, description, due_date, payment_date, value, obs, ty
 INSERT INTO registers (code, description, due_date, payment_date, value, obs, type, id_category, id_person) values ('393662e1-633f-4463-95a2-8052d2e0edd8', 'Instrumentos', '2017-06-10', null, 1040.32, null, 'EXPENSE', 4, 2);
 INSERT INTO registers (code, description, due_date, payment_date, value, obs, type, id_category, id_person) values ('2566ad4f-8e3e-4729-8f5c-16bc79312f19', 'Café', '2017-04-10', '2017-04-10', 4.32, null, 'EXPENSE', 4, 2);
 INSERT INTO registers (code, description, due_date, payment_date, value, obs, type, id_category, id_person) values ('d96523b6-22fc-4e1c-a98a-1df1f2009ca5', 'Lanche', '2017-06-10', null, 10.20, null, 'EXPENSE', 4, 1);
+
+INSERT INTO user (code, name, email, password) values ("093cc8dc-587e-11ec-84ad-c79b81813928", 'Administrador', 'admin@algamoney.com', '$2a$10$X607ZPhQ4EgGNaYKt3n4SONjIv9zc.VMWdEuhCuba7oLAL5IvcL5.');
+INSERT INTO user (code, name, email, password) values ("1b6a3aee-587e-11ec-ae5e-fbbf4023da0a", 'Bolete Gomes', 'bolete@algamoney.com', '$2a$10$Zc3w6HyuPOPXamaMhh.PQOXvDnEsadztbfi6/RyZWJDzimE8WQjaq');
+
+INSERT INTO permission (description) values ('ROLE_CADASTRAR_CATEGORIA');
+INSERT INTO permission (description) values ('ROLE_PESQUISAR_CATEGORIA');
+
+INSERT INTO permission (description) values ('ROLE_CADASTRAR_PESSOA');
+INSERT INTO permission (description) values ('ROLE_REMOVER_PESSOA');
+INSERT INTO permission (description) values ('ROLE_PESQUISAR_PESSOA');
+
+INSERT INTO permission (description) values ('ROLE_CADASTRAR_LANCAMENTO');
+INSERT INTO permission (description) values ('ROLE_REMOVER_LANCAMENTO');
+INSERT INTO permission (description) values ('ROLE_PESQUISAR_LANCAMENTO');
+
+-- admin
+INSERT INTO user_permission (id_user, id_permission) values (1, 1);
+INSERT INTO user_permission (id_user, id_permission) values (1, 2);
+INSERT INTO user_permission (id_user, id_permission) values (1, 3);
+INSERT INTO user_permission (id_user, id_permission) values (1, 4);
+INSERT INTO user_permission (id_user, id_permission) values (1, 5);
+INSERT INTO user_permission (id_user, id_permission) values (1, 6);
+INSERT INTO user_permission (id_user, id_permission) values (1, 7);
+INSERT INTO user_permission (id_user, id_permission) values (1, 8);
+
+-- maria
+INSERT INTO user_permission (id_user, id_permission) values (2, 2);
+INSERT INTO user_permission (id_user, id_permission) values (2, 5);
+INSERT INTO user_permission (id_user, id_permission) values (2, 8);

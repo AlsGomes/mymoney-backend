@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,18 +36,21 @@ public class PersonController {
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
 
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and hasAuthority('SCOPE_read')")
 	@GetMapping
 	public ResponseEntity<List<PersonDTO>> findAll() {
 		List<PersonDTO> listDTO = service.findAll();
 		return ResponseEntity.ok(listDTO);
 	}
 
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and hasAuthority('SCOPE_read')")
 	@GetMapping(path = "/{code}")
 	public ResponseEntity<PersonDTO> findByCode(@PathVariable String code) {
 		PersonDTO objDTO = service.findByCodeOrThrow(code);
 		return ResponseEntity.ok(objDTO);
 	}
 
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and hasAuthority('SCOPE_write')")
 	@PostMapping
 	public ResponseEntity<PersonDTO> saveNew(
 			@RequestBody @Valid PersonDTOInsert objDTO,
@@ -57,6 +61,7 @@ public class PersonController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(newObjDTO);
 	}
 	
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and hasAuthority('SCOPE_write')")
 	@PutMapping(path = "/{code}")
 	public ResponseEntity<PersonDTO> update(
 			@PathVariable String code, 
@@ -67,6 +72,7 @@ public class PersonController {
 		return ResponseEntity.ok(objUpdated);
 	}
 	
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and hasAuthority('SCOPE_write')")
 	@PutMapping(path = "/{code}/address")
 	public ResponseEntity<PersonDTO> updateAddress(
 			@PathVariable String code, 
@@ -77,6 +83,7 @@ public class PersonController {
 		return ResponseEntity.ok(objUpdated);
 	}
 	
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and hasAuthority('SCOPE_write')")
 	@PutMapping(path = "/{code}/active")
 	public ResponseEntity<PersonDTO> updateActive(
 			@PathVariable String code, 
@@ -86,6 +93,7 @@ public class PersonController {
 		return ResponseEntity.ok(objUpdated);
 	}
 	
+	@PreAuthorize("hasAuthority('ROLE_REMOVER_PESSOA') and hasAuthority('SCOPE_write')")
 	@DeleteMapping(path = "/{code}")
 	public ResponseEntity<Void> deleteByCode(@PathVariable String code) {
 		service.deleteByCode(code);

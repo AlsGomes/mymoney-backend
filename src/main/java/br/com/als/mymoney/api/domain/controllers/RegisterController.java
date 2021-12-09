@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,18 +36,21 @@ public class RegisterController {
 	@Autowired
 	ApplicationEventPublisher eventPublisher;
 
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and hasAuthority('SCOPE_read')")
 	@GetMapping
 	public ResponseEntity<List<RegisterDTO>> findAll() {
 		List<RegisterDTO> listDTO = service.findAll();
 		return ResponseEntity.ok(listDTO);
 	}
 
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and hasAuthority('SCOPE_read')")
 	@GetMapping(path = "/{code}")
 	public ResponseEntity<RegisterDTO> findByCode(@PathVariable String code) {
 		RegisterDTO objDTO = service.findByCodeOrThrow(code);
 		return ResponseEntity.ok(objDTO);
 	}
 
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and hasAuthority('SCOPE_read')")
 	@GetMapping(path = "/filter")
 	public ResponseEntity<SimplePage<RegisterDTO>> search(			
 			RegisterFilter filter,
@@ -56,6 +60,7 @@ public class RegisterController {
 		return ResponseEntity.ok(listDTO);
 	}
 
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and hasAuthority('SCOPE_write')")
 	@PostMapping
 	public ResponseEntity<RegisterDTO> saveNew(			
 			@RequestBody @Valid RegisterDTOInsert objDTO, 
@@ -66,6 +71,7 @@ public class RegisterController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(objNew);
 	}
 
+	@PreAuthorize("hasAuthority('ROLE_REMOVER_LANCAMENTO') and hasAuthority('SCOPE_write')")
 	@DeleteMapping(path = "/{code}")
 	public ResponseEntity<Void> delete(@PathVariable String code) {		
 		service.delete(code);
