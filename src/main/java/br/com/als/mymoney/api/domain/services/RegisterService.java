@@ -16,6 +16,7 @@ import br.com.als.mymoney.api.domain.model.Person;
 import br.com.als.mymoney.api.domain.model.Register;
 import br.com.als.mymoney.api.domain.model.dto.RegisterDTO;
 import br.com.als.mymoney.api.domain.model.dto.RegisterDTOInsert;
+import br.com.als.mymoney.api.domain.model.dto.RegisterDTOSummary;
 import br.com.als.mymoney.api.domain.repositories.RegisterRepository;
 import br.com.als.mymoney.api.domain.repositories.filters.RegisterFilter;
 import br.com.als.mymoney.api.domain.services.exceptions.DomainException;
@@ -85,6 +86,17 @@ public class RegisterService {
 		Page<Register> list = repository.search(filter, pageable);
 		Page<RegisterDTO> listDTO = list.map(RegisterDTO::new);
 		SimplePage<RegisterDTO> simplePage = new SimplePage<>(listDTO); 
+
+		return simplePage;
+	}
+
+	public SimplePage<RegisterDTOSummary> searchSummary(RegisterFilter filter, Pageable pageable) {
+		if (!filter.isValidDate())
+			throw new DomainException("Vencimento Até, precisa ser maior do que Vencimento De");
+
+		Page<Register> list = repository.search(filter, pageable);
+		Page<RegisterDTOSummary> listDTO = list.map(RegisterDTOSummary::new);
+		SimplePage<RegisterDTOSummary> simplePage = new SimplePage<>(listDTO); 
 
 		return simplePage;
 	}

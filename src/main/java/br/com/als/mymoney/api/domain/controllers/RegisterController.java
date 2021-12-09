@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.als.mymoney.api.domain.controllers.utils.SimplePage;
 import br.com.als.mymoney.api.domain.model.dto.RegisterDTO;
 import br.com.als.mymoney.api.domain.model.dto.RegisterDTOInsert;
+import br.com.als.mymoney.api.domain.model.dto.RegisterDTOSummary;
 import br.com.als.mymoney.api.domain.repositories.filters.RegisterFilter;
 import br.com.als.mymoney.api.domain.services.RegisterService;
 import br.com.als.mymoney.api.events.ResourceCreatedEvent;
@@ -59,6 +60,16 @@ public class RegisterController {
 		SimplePage<RegisterDTO> listDTO = service.search(filter, pageable);
 		return ResponseEntity.ok(listDTO);
 	}
+	
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and hasAuthority('SCOPE_read')")
+	@GetMapping(path = "/filter", params = "summary")
+	public ResponseEntity<SimplePage<RegisterDTOSummary>> searchSummary(			
+			RegisterFilter filter,
+			Pageable pageable) {
+
+		SimplePage<RegisterDTOSummary> listDTO = service.searchSummary(filter, pageable);
+		return ResponseEntity.ok(listDTO);
+	}	
 
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and hasAuthority('SCOPE_write')")
 	@PostMapping
