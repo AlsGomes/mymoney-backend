@@ -5,9 +5,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.als.mymoney.api.domain.assemblers.PersonAssembler;
+import br.com.als.mymoney.api.domain.controllers.utils.SimplePage;
 import br.com.als.mymoney.api.domain.disassemblers.PersonDisassembler;
 import br.com.als.mymoney.api.domain.model.Address;
 import br.com.als.mymoney.api.domain.model.Person;
@@ -57,6 +60,12 @@ public class PersonService {
 		var list = repository.findAll();
 		List<PersonDTO> listDTO = list.stream().map(PersonDTO::new).collect(Collectors.toList());
 		return listDTO;
+	}
+
+	public SimplePage<PersonDTO> search(String name, Pageable pageable) {
+		Page<PersonDTO> pageDTO = repository.findByNameContaining(name, pageable);
+		SimplePage<PersonDTO> simplePageDTO = new SimplePage<>(pageDTO);				
+		return simplePageDTO;
 	}
 
 	public PersonDTO saveNew(PersonDTOInsert objDTOInsert) {

@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,8 +18,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.als.mymoney.api.domain.controllers.utils.SimplePage;
 import br.com.als.mymoney.api.domain.model.dto.PersonDTO;
 import br.com.als.mymoney.api.domain.model.dto.PersonDTOInsert;
 import br.com.als.mymoney.api.domain.model.dto.PersonDTOUpdate;
@@ -44,11 +47,20 @@ public class PersonController {
 	}
 
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and hasAuthority('SCOPE_read')")
+	@GetMapping("/filter")
+	public ResponseEntity<SimplePage<PersonDTO>> search(
+			@RequestParam(required = false, defaultValue = "") String name,
+			Pageable pageable) {
+		SimplePage<PersonDTO> listDTO = service.search(name, pageable);
+		return ResponseEntity.ok(listDTO);
+	}
+
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and hasAuthority('SCOPE_read')")
 	@GetMapping(path = "/{code}")
 	public ResponseEntity<PersonDTO> findByCode(@PathVariable String code) {
 		PersonDTO objDTO = service.findByCodeOrThrow(code);
 		return ResponseEntity.ok(objDTO);
-	}
+	}	
 
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and hasAuthority('SCOPE_write')")
 	@PostMapping
