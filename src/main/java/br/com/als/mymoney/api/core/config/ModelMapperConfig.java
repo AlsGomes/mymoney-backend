@@ -13,6 +13,7 @@ import br.com.als.mymoney.api.domain.model.Register;
 import br.com.als.mymoney.api.domain.model.dto.PersonDTOUpdate;
 import br.com.als.mymoney.api.domain.model.dto.RegisterDTO;
 import br.com.als.mymoney.api.domain.model.dto.RegisterDTOInsert;
+import br.com.als.mymoney.api.domain.model.dto.RegisterDTOUpdate;
 
 @Configuration
 public class ModelMapperConfig {
@@ -29,17 +30,22 @@ public class ModelMapperConfig {
 	}
 
 	private void mapToAssembleRegister(ModelMapper modelMapper) {
-		var typeMap = modelMapper.createTypeMap(RegisterDTOInsert.class, Register.class);
-
 		Converter<String, LocalDate> parseToDateConverter = ctx -> ctx.getSource() == null ? null
 				: LocalDate.parse(ctx.getSource());
-
-		typeMap.addMappings(
+		
+		var typeMapInsert = modelMapper.createTypeMap(RegisterDTOInsert.class, Register.class);
+		typeMapInsert.addMappings(
 				mapper -> mapper.using(parseToDateConverter).map(RegisterDTOInsert::getDueDate, Register::setDueDate));
 
-		typeMap.addMappings(mapper -> mapper.using(parseToDateConverter).map(RegisterDTOInsert::getPaymentDate,
+		typeMapInsert.addMappings(mapper -> mapper.using(parseToDateConverter).map(RegisterDTOInsert::getPaymentDate,
 				Register::setPaymentDate));
 
+		var typeMapUpdate = modelMapper.createTypeMap(RegisterDTOUpdate.class, Register.class);
+		typeMapUpdate.addMappings(
+				mapper -> mapper.using(parseToDateConverter).map(RegisterDTOUpdate::getDueDate, Register::setDueDate));
+		
+		typeMapUpdate.addMappings(mapper -> mapper.using(parseToDateConverter).map(RegisterDTOUpdate::getPaymentDate,
+				Register::setPaymentDate));
 	}
 
 	private void mapToDisassembleRegister(ModelMapper modelMapper) {

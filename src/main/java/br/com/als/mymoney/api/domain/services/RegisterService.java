@@ -17,6 +17,7 @@ import br.com.als.mymoney.api.domain.model.Register;
 import br.com.als.mymoney.api.domain.model.dto.RegisterDTO;
 import br.com.als.mymoney.api.domain.model.dto.RegisterDTOInsert;
 import br.com.als.mymoney.api.domain.model.dto.RegisterDTOSummary;
+import br.com.als.mymoney.api.domain.model.dto.RegisterDTOUpdate;
 import br.com.als.mymoney.api.domain.repositories.RegisterRepository;
 import br.com.als.mymoney.api.domain.repositories.filters.RegisterFilter;
 import br.com.als.mymoney.api.domain.services.exceptions.DomainException;
@@ -116,6 +117,20 @@ public class RegisterService {
 		newRegister = repository.save(newRegister);
 
 		var registerDTO = new RegisterDTO(newRegister);
+		return registerDTO;
+	}
+
+	public RegisterDTO update(String code, RegisterDTOUpdate objDTO) {
+		var register = findByCodeOrThrowAsRegister(code);
+		var person = findPerson(objDTO.getPerson().getCode());
+		var category = findCategory(objDTO.getCategory().getCode());
+		
+		assembler.toRegister(objDTO, register);
+		register.setCategory(category);
+		register.setPerson(person);
+		
+		register = repository.save(register);
+		var registerDTO = new RegisterDTO(register);
 		return registerDTO;
 	}
 

@@ -16,7 +16,7 @@ import br.com.als.mymoney.api.domain.model.dto.validation.AnyValueOfEnum;
 import br.com.als.mymoney.api.domain.model.dto.validation.DateTimeFormatWithPattern;
 
 @JsonInclude(Include.NON_NULL)
-public class RegisterDTOInsert {
+public class RegisterDTOUpdate {
 
 	@NotBlank
 	@Size(min = 1, max = 50)
@@ -32,7 +32,7 @@ public class RegisterDTOInsert {
 	@NotNull
 	@DecimalMin(value = "0.00")
 	private BigDecimal value;
-
+	
 	@Size(min = 1, max = 100)
 	private String obs;
 
@@ -48,9 +48,9 @@ public class RegisterDTOInsert {
 	@Valid
 	private PersonDTOCodeNonNull person;
 
-	public RegisterDTOInsert() {}
+	public RegisterDTOUpdate() {}
 
-	public RegisterDTOInsert(
+	public RegisterDTOUpdate(
 			String description,
 			String dueDate,
 			String paymentDate,
