@@ -1,5 +1,7 @@
 set foreign_key_checks=0;
 
+lock tables category write, person write, register write, user write, permission write, user_permission write;
+
 TRUNCATE TABLE category;
 TRUNCATE TABLE person;
 TRUNCATE TABLE registers;
@@ -63,3 +65,5 @@ INSERT INTO user_permission (id_user, id_permission) values (1, 8);
 INSERT INTO user_permission (id_user, id_permission) values (2, 2);
 INSERT INTO user_permission (id_user, id_permission) values (2, 5);
 INSERT INTO user_permission (id_user, id_permission) values (2, 8);
+
+unlock tables;

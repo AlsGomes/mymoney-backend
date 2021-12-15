@@ -7,8 +7,7 @@ import java.time.format.DateTimeParseException;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class DateTimeFormatWithPatternValidator
-		implements ConstraintValidator<DateTimeFormatWithPattern, CharSequence> {
+public class DateTimeFormatWithPatternValidator implements ConstraintValidator<DateTimeFormatWithPattern, String> {
 
 	private DateTimeFormatter dtf;
 	private String pattern;
@@ -20,7 +19,7 @@ public class DateTimeFormatWithPatternValidator
 	}
 
 	@Override
-	public boolean isValid(CharSequence value, ConstraintValidatorContext context) {
+	public boolean isValid(String value, ConstraintValidatorContext context) {
 
 		try {
 			this.dtf = DateTimeFormatter.ofPattern(pattern);
@@ -32,6 +31,7 @@ public class DateTimeFormatWithPatternValidator
 		try {
 			if (value != null && !value.isEmpty())
 				LocalDate.parse(value, dtf);
+
 		} catch (DateTimeParseException e) {
 			return false;
 		}

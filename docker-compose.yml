@@ -1,0 +1,27 @@
+version: "3.9"
+
+networks:
+  mymoney-network:
+    driver: bridge
+
+services:
+  mymoney-mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - "3306:3306"
+    networks:
+      - mymoney-network
+
+  mymoney-api:
+    image: mymoney-api
+    command: ["/wait-for-it.sh", "algafood-mysql:3306", "-t", "30", "--", "java", "-jar", "api.jar"]
+    environment:
+      DB_HOST: mymoney-mysql
+    ports:
+      - "8080:8080"
+    networks:
+      - mymoney-network
+    depends_on:
+      - mymoney-mysql
