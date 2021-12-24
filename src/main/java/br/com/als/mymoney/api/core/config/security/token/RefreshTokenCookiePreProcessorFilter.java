@@ -11,6 +11,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.catalina.util.ParameterMap;
 import org.springframework.core.Ordered;
@@ -25,6 +26,7 @@ public class RefreshTokenCookiePreProcessorFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
                 HttpServletRequest req = (HttpServletRequest) request;
+                HttpServletResponse res = (HttpServletResponse) response;
 
                 if ("/oauth/token".equalsIgnoreCase(req.getRequestURI())
                     && "refresh_token".equals(req.getParameter("grant_type"))
@@ -39,9 +41,8 @@ public class RefreshTokenCookiePreProcessorFilter implements Filter {
               
                   req = new MyServletRequestWrapper(req, refreshToken);
                 }
-              
-                chain.doFilter(req, response);
-        
+                              
+                chain.doFilter(req, res);        
     }
     
     static class MyServletRequestWrapper extends HttpServletRequestWrapper {

@@ -34,12 +34,14 @@ public class BasicSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 			.anyRequest().authenticated()
 			.and()
-			.httpBasic()
+				.httpBasic()
 			.and()
-			.sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.sessionManagement()
+					.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
-			.csrf().disable();
+				.cors()
+			.and()
+				.csrf().disable();
 	}
 	
 }

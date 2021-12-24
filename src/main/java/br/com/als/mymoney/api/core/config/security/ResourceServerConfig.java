@@ -45,6 +45,8 @@ public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
 			.and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
+				.cors()
+			.and()
 				.csrf().disable()
 			.oauth2ResourceServer().jwt()
 				.jwtAuthenticationConverter(jwtAuthenticationConverter());
