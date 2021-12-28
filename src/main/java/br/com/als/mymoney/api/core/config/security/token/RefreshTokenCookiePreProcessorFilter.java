@@ -28,18 +28,28 @@ public class RefreshTokenCookiePreProcessorFilter implements Filter {
                 HttpServletRequest req = (HttpServletRequest) request;
                 HttpServletResponse res = (HttpServletResponse) response;
 
+                if ("/oauth/token".equalsIgnoreCase(req.getRequestURI())) {              
+                	 res.setHeader("Access-Control-Allow-Origin", "*");
+                     res.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
+                     res.setHeader("Access-Control-Allow-Headers", "*");
+//                     res.setHeader("Access-Control-Max-Age", "3600");
+                     if ("OPTIONS".equalsIgnoreCase(((HttpServletRequest) req).getMethod())) {
+                         res.setStatus(HttpServletResponse.SC_OK);
+                     }
+                }
+                
                 if ("/oauth/token".equalsIgnoreCase(req.getRequestURI())
-                    && "refresh_token".equals(req.getParameter("grant_type"))
-                    && req.getCookies() != null) {
-              
-                  String refreshToken = 
-                      Stream.of(req.getCookies())
-                          .filter(cookie -> "refreshToken".equals(cookie.getName()))
-                          .findFirst()
-                          .map(cookie -> cookie.getValue())
-                          .orElse(null);
-              
-                  req = new MyServletRequestWrapper(req, refreshToken);
+                		&& "refresh_token".equals(req.getParameter("grant_type"))
+                		&& req.getCookies() != null) {
+                	
+                	String refreshToken = 
+                			Stream.of(req.getCookies())
+                			.filter(cookie -> "refreshToken".equals(cookie.getName()))
+                			.findFirst()
+                			.map(cookie -> cookie.getValue())
+                			.orElse(null);
+                	
+                	req = new MyServletRequestWrapper(req, refreshToken);
                 }
                               
                 chain.doFilter(req, res);        
