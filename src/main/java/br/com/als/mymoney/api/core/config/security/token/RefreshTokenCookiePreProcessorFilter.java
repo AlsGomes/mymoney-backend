@@ -31,7 +31,7 @@ public class RefreshTokenCookiePreProcessorFilter implements Filter {
                 if ("/oauth/token".equalsIgnoreCase(req.getRequestURI())) {              
                 	 res.setHeader("Access-Control-Allow-Origin", "*");
                      res.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
-                     res.setHeader("Access-Control-Allow-Headers", "*");
+                     res.setHeader("Access-Control-Allow-Headers", "Authorization,*");
 //                     res.setHeader("Access-Control-Max-Age", "3600");
                      if ("OPTIONS".equalsIgnoreCase(((HttpServletRequest) req).getMethod())) {
                          res.setStatus(HttpServletResponse.SC_OK);
