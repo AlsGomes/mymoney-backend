@@ -14,26 +14,33 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.catalina.util.ParameterMap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import br.com.als.mymoney.api.core.config.properties.MyMoneyProperty;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class RefreshTokenCookiePreProcessorFilter implements Filter {
 
-    @Override
+	@Autowired
+	private MyMoneyProperty properties;
+	
+	@Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
                 HttpServletRequest req = (HttpServletRequest) request;
                 HttpServletResponse res = (HttpServletResponse) response;
 
                 if ("/oauth/token".equalsIgnoreCase(req.getRequestURI())) {              
-                	 res.setHeader("Access-Control-Allow-Origin", "*");
+                	 res.setHeader("Access-Control-Allow-Origin", properties.getSecurity().getAllowedOrigins());
                      res.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
                      res.setHeader("Access-Control-Allow-Headers", "Authorization,*");
+                     res.setHeader("Access-Control-Allow-Credentials", "true");
 //                     res.setHeader("Access-Control-Max-Age", "3600");
-                     if ("OPTIONS".equalsIgnoreCase(((HttpServletRequest) req).getMethod())) {
+                     if ("OPTIONS".equals(req.getMethod()) && properties.getSecurity().getAllowedOrigins().equals(req.getHeader("Origin"))) {
                          res.setStatus(HttpServletResponse.SC_OK);
                      }
                 }

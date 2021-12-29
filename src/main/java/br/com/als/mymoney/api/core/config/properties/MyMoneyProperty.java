@@ -12,9 +12,10 @@ public class MyMoneyProperty {
 	public Security getSecurity() {
 		return security;
 	}
-	
+
 	public static class Security {
 		private boolean enableHttps;
+		private String allowedOrigins;
 
 		public boolean isEnableHttps() {
 			return enableHttps;
@@ -22,6 +23,14 @@ public class MyMoneyProperty {
 
 		public void setEnableHttps(boolean enableHttps) {
 			this.enableHttps = enableHttps;
+		}
+
+		public String getAllowedOrigins() {
+			return allowedOrigins;
+		}
+
+		public void setAllowedOrigins(String allowedOrigins) {
+			this.allowedOrigins = allowedOrigins;
 		}
 	}
 }
