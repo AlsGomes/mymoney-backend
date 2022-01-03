@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import br.com.als.mymoney.api.domain.model.Register;
 import br.com.als.mymoney.api.domain.model.dto.statistics.RegisterStatisticsByCategory;
 import br.com.als.mymoney.api.domain.model.dto.statistics.RegisterStatisticsByDay;
+import br.com.als.mymoney.api.domain.model.dto.statistics.RegisterStatisticsByPerson;
 import br.com.als.mymoney.api.domain.repositories.filters.RegisterFilter;
 
 public interface RegisterRepositoryQuery {
@@ -18,4 +19,6 @@ public interface RegisterRepositoryQuery {
 	List<RegisterStatisticsByCategory> byCategory(LocalDate monthReference);
 
 	List<RegisterStatisticsByDay> byDay(LocalDate monthReference);
+
+	List<RegisterStatisticsByPerson> byPerson(LocalDate dateFrom, LocalDate dateUntil);
 }

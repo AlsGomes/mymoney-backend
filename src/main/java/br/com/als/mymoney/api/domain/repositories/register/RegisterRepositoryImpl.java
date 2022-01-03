@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import br.com.als.mymoney.api.domain.model.Register;
 import br.com.als.mymoney.api.domain.model.dto.statistics.RegisterStatisticsByCategory;
 import br.com.als.mymoney.api.domain.model.dto.statistics.RegisterStatisticsByDay;
+import br.com.als.mymoney.api.domain.model.dto.statistics.RegisterStatisticsByPerson;
 import br.com.als.mymoney.api.domain.repositories.filters.RegisterFilter;
 
 public class RegisterRepositoryImpl implements RegisterRepositoryQuery {
@@ -84,6 +85,28 @@ public class RegisterRepositoryImpl implements RegisterRepositoryQuery {
 		criteriaQuery.groupBy(
 				root.get("type"),
 				root.get("dueDate"));
+
+		return manager.createQuery(criteriaQuery).getResultList();
+	}
+
+	@Override
+	public List<RegisterStatisticsByPerson> byPerson(LocalDate dateFrom, LocalDate dateUntil) {
+		var criteriaBuilder = manager.getCriteriaBuilder();
+		var criteriaQuery = criteriaBuilder.createQuery(RegisterStatisticsByPerson.class);
+		var root = criteriaQuery.from(Register.class);
+
+		criteriaQuery.select(criteriaBuilder.construct(RegisterStatisticsByPerson.class,
+				root.get("person"),
+				root.get("type"),
+				criteriaBuilder.sum(root.get("value"))));
+
+		criteriaQuery.where(
+				criteriaBuilder.greaterThanOrEqualTo(root.get("dueDate"), dateFrom),
+				criteriaBuilder.lessThanOrEqualTo(root.get("dueDate"), dateUntil));
+
+		criteriaQuery.groupBy(
+				root.get("type"),
+				root.get("person"));
 
 		return manager.createQuery(criteriaQuery).getResultList();
 	}

@@ -1,7 +1,10 @@
 package br.com.als.mymoney.api.domain.services;
 
+import java.sql.Date;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,10 @@ import br.com.als.mymoney.api.domain.repositories.RegisterRepository;
 import br.com.als.mymoney.api.domain.repositories.filters.RegisterFilter;
 import br.com.als.mymoney.api.domain.services.exceptions.DomainException;
 import br.com.als.mymoney.api.domain.services.exceptions.ObjectNotFoundException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 @Service
 public class RegisterService {
@@ -152,5 +159,30 @@ public class RegisterService {
 		if (date == null)
 			date = LocalDate.now();
 		return repository.byDay(date);
+	}
+
+	public byte[] reportByPerson(LocalDate dateFrom, LocalDate dateUntil) throws Exception {
+		if (dateFrom != null ^ dateUntil != null)
+			throw new DomainException(
+					"O parâmetro dateFrom e dateUntil são obrigatórios, ou, não envie nenhum dos dois para que seja usado o mês corrente");
+
+		if (dateFrom == null && dateUntil == null) {
+			var now = LocalDate.now();
+			dateFrom = now.withDayOfMonth(1);
+			dateUntil = now.withDayOfMonth(now.lengthOfMonth());
+		}
+
+		var list = repository.byPerson(dateFrom, dateUntil);
+
+		var params = new HashMap<String, Object>();
+		params.put("DT_INICIO", Date.valueOf(dateFrom));
+		params.put("DT_FIM", Date.valueOf(dateUntil));
+		params.put("REPORT", new Locale("pt", "BR"));
+
+		var stream = this.getClass().getResourceAsStream("/reports/registers-by-person.jasper");
+
+		JasperPrint jasperPrint = JasperFillManager.fillReport(stream, params, new JRBeanCollectionDataSource(list));
+
+		return JasperExportManager.exportReportToPdf(jasperPrint);
 	}
 }
