@@ -1,5 +1,6 @@
 package br.com.als.mymoney.api.domain.services;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +19,8 @@ import br.com.als.mymoney.api.domain.model.dto.RegisterDTO;
 import br.com.als.mymoney.api.domain.model.dto.RegisterDTOInsert;
 import br.com.als.mymoney.api.domain.model.dto.RegisterDTOSummary;
 import br.com.als.mymoney.api.domain.model.dto.RegisterDTOUpdate;
+import br.com.als.mymoney.api.domain.model.dto.statistics.RegisterStatisticsByCategory;
+import br.com.als.mymoney.api.domain.model.dto.statistics.RegisterStatisticsByDay;
 import br.com.als.mymoney.api.domain.repositories.RegisterRepository;
 import br.com.als.mymoney.api.domain.repositories.filters.RegisterFilter;
 import br.com.als.mymoney.api.domain.services.exceptions.DomainException;
@@ -53,7 +56,7 @@ public class RegisterService {
 
 	public RegisterDTO findByCodeOrThrow(String code) {
 		if (code == null)
-			throw new ObjectNotFoundException("Lançamento não encontrado");		
+			throw new ObjectNotFoundException("Lançamento não encontrado");
 
 		Register obj = repository.findByCode(code)
 				.orElseThrow(() -> new ObjectNotFoundException("Lancamento não encontrado"));
@@ -66,7 +69,7 @@ public class RegisterService {
 	public Register findByCodeOrThrowAsRegister(String code) {
 		if (code == null)
 			throw new ObjectNotFoundException("Lançamento não encontrado");
-		
+
 		Register obj = repository.findByCode(code)
 				.orElseThrow(() -> new ObjectNotFoundException("Lancamento não encontrado"));
 
@@ -86,7 +89,7 @@ public class RegisterService {
 
 		Page<Register> list = repository.search(filter, pageable);
 		Page<RegisterDTO> listDTO = list.map(RegisterDTO::new);
-		SimplePage<RegisterDTO> simplePage = new SimplePage<>(listDTO); 
+		SimplePage<RegisterDTO> simplePage = new SimplePage<>(listDTO);
 
 		return simplePage;
 	}
@@ -97,7 +100,7 @@ public class RegisterService {
 
 		Page<Register> list = repository.search(filter, pageable);
 		Page<RegisterDTOSummary> listDTO = list.map(RegisterDTOSummary::new);
-		SimplePage<RegisterDTOSummary> simplePage = new SimplePage<>(listDTO); 
+		SimplePage<RegisterDTOSummary> simplePage = new SimplePage<>(listDTO);
 
 		return simplePage;
 	}
@@ -124,11 +127,11 @@ public class RegisterService {
 		var register = findByCodeOrThrowAsRegister(code);
 		var person = findPerson(objDTO.getPerson().getCode());
 		var category = findCategory(objDTO.getCategory().getCode());
-		
+
 		assembler.toRegister(objDTO, register);
 		register.setCategory(category);
 		register.setPerson(person);
-		
+
 		register = repository.save(register);
 		var registerDTO = new RegisterDTO(register);
 		return registerDTO;
@@ -137,5 +140,17 @@ public class RegisterService {
 	public void delete(String code) {
 		var register = findByCodeOrThrowAsRegister(code);
 		repository.delete(register);
+	}
+
+	public List<RegisterStatisticsByCategory> statisticsByCategory(LocalDate date) {
+		if (date == null)
+			date = LocalDate.now();
+		return repository.byCategory(date);
+	}
+
+	public List<RegisterStatisticsByDay> statisticsByDay(LocalDate date) {
+		if (date == null)
+			date = LocalDate.now();
+		return repository.byDay(date);
 	}
 }

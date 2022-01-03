@@ -1,5 +1,6 @@
 package br.com.als.mymoney.api.domain.repositories.register;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import br.com.als.mymoney.api.domain.model.Register;
+import br.com.als.mymoney.api.domain.model.dto.statistics.RegisterStatisticsByCategory;
+import br.com.als.mymoney.api.domain.model.dto.statistics.RegisterStatisticsByDay;
 import br.com.als.mymoney.api.domain.repositories.filters.RegisterFilter;
 
 public class RegisterRepositoryImpl implements RegisterRepositoryQuery {
@@ -40,8 +43,53 @@ public class RegisterRepositoryImpl implements RegisterRepositoryQuery {
 		return new PageImpl<>(query.getResultList(), pageable, totalRecords(filter));
 	}
 
+	@Override
+	public List<RegisterStatisticsByCategory> byCategory(LocalDate monthReference) {
+		var criteriaBuilder = manager.getCriteriaBuilder();
+		var criteriaQuery = criteriaBuilder.createQuery(RegisterStatisticsByCategory.class);
+		var root = criteriaQuery.from(Register.class);
+
+		criteriaQuery.select(criteriaBuilder.construct(RegisterStatisticsByCategory.class,
+				root.get("category"),
+				criteriaBuilder.sum(root.get("value"))));
+
+		var firstDay = monthReference.withDayOfMonth(1);
+		var lastDay = monthReference.withDayOfMonth(monthReference.lengthOfMonth());
+		criteriaQuery.where(
+				criteriaBuilder.greaterThanOrEqualTo(root.get("dueDate"), firstDay),
+				criteriaBuilder.lessThanOrEqualTo(root.get("dueDate"), lastDay));
+
+		criteriaQuery.groupBy(root.get("category"));
+
+		return manager.createQuery(criteriaQuery).getResultList();
+	}
+
+	@Override
+	public List<RegisterStatisticsByDay> byDay(LocalDate monthReference) {
+		var criteriaBuilder = manager.getCriteriaBuilder();
+		var criteriaQuery = criteriaBuilder.createQuery(RegisterStatisticsByDay.class);
+		var root = criteriaQuery.from(Register.class);
+
+		criteriaQuery.select(criteriaBuilder.construct(RegisterStatisticsByDay.class,
+				root.get("type"),
+				root.get("dueDate"),
+				criteriaBuilder.sum(root.get("value"))));
+
+		var firstDay = monthReference.withDayOfMonth(1);
+		var lastDay = monthReference.withDayOfMonth(monthReference.lengthOfMonth());
+		criteriaQuery.where(
+				criteriaBuilder.greaterThanOrEqualTo(root.get("dueDate"), firstDay),
+				criteriaBuilder.lessThanOrEqualTo(root.get("dueDate"), lastDay));
+
+		criteriaQuery.groupBy(
+				root.get("type"),
+				root.get("dueDate"));
+
+		return manager.createQuery(criteriaQuery).getResultList();
+	}
+
 	private Predicate[] createPredicates(Root<Register> root, CriteriaBuilder builder, RegisterFilter filter) {
-		List<Predicate> predicates = new ArrayList<>();	
+		List<Predicate> predicates = new ArrayList<>();
 
 		if (filter.getDescription() != null && !filter.getDescription().trim().isEmpty()) {
 			predicates.add(builder.like(root.get("description"), "%" + filter.getDescription() + "%"));
