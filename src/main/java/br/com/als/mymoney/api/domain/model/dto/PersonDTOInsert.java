@@ -5,7 +5,19 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import br.com.als.mymoney.api.domain.model.Address;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+@Setter
+@ToString
 public class PersonDTOInsert {
 
 	@NotBlank
@@ -16,39 +28,4 @@ public class PersonDTOInsert {
 
 	@Valid
 	private Address address;
-
-	public PersonDTOInsert() {
-		super();
-	}
-
-	public PersonDTOInsert(String name, Boolean active, Address address) {
-		super();
-		this.name = name;
-		this.active = active;
-		this.address = address;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
-
-	public Address getAddress() {
-		return address;
-	}
-
-	public void setAddress(Address address) {
-		this.address = address;
-	}
 }

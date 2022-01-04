@@ -4,39 +4,21 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import br.com.als.mymoney.api.domain.model.RegisterType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+@Setter
+@ToString
 public class RegisterStatisticsByDay {
 	private RegisterType type;
 	private LocalDate day;
 	private BigDecimal total;
-
-	public RegisterStatisticsByDay(RegisterType type, LocalDate day, BigDecimal total) {
-		this.type = type;
-		this.day = day;
-		this.total = total;
-	}
-
-	public RegisterType getType() {
-		return type;
-	}
-
-	public void setType(RegisterType type) {
-		this.type = type;
-	}
-
-	public LocalDate getDay() {
-		return day;
-	}
-
-	public void setDay(LocalDate day) {
-		this.day = day;
-	}
-
-	public BigDecimal getTotal() {
-		return total;
-	}
-
-	public void setTotal(BigDecimal total) {
-		this.total = total;
-	}
 }

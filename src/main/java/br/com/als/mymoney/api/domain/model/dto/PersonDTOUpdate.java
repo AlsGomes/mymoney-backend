@@ -3,49 +3,31 @@ package br.com.als.mymoney.api.domain.model.dto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Setter
+@ToString
 public class PersonDTOUpdate {
 
+	@Getter
 	private String code;
 
+	@Getter
 	@NotBlank
 	@Size(min = 1, max = 50)
 	private String name;
-
+	
 	private Boolean active;
-
-	public PersonDTOUpdate() {
-		super();
-	}
-
-	public PersonDTOUpdate(String name, Boolean active, String code) {
-		super();
-		this.name = name;
-		this.active = active;
-		this.code = code;
-	}
-
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	public Boolean isActive() {
 		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
-	
-	public String getCode() {
-		return code;
-	}
-	
-	public void setCode(String code) {
-		this.code = code;
 	}
 }

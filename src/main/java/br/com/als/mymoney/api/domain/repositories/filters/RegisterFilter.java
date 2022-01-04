@@ -4,6 +4,11 @@ import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class RegisterFilter {
 
 	private String description;
@@ -13,30 +18,6 @@ public class RegisterFilter {
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dueDateUntil;
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public LocalDate getDueDateUntil() {
-		return dueDateUntil;
-	}
-
-	public void setDueDateUntil(LocalDate dueDateUntil) {
-		this.dueDateUntil = dueDateUntil;
-	}
-
-	public LocalDate getDueDateFrom() {
-		return dueDateFrom;
-	}
-
-	public void setDueDateFrom(LocalDate dueDateFrom) {
-		this.dueDateFrom = dueDateFrom;
-	}
 
 	public boolean isValidDate() {
 		if (dueDateFrom != null && dueDateUntil != null) {

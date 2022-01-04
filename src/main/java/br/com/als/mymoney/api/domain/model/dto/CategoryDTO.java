@@ -1,41 +1,28 @@
 package br.com.als.mymoney.api.domain.model.dto;
 
 import br.com.als.mymoney.api.domain.model.Category;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString
 public class CategoryDTO {
 
+	@EqualsAndHashCode.Include
 	private String code;
+	
 	private String name;
 
-	public CategoryDTO() {
-		super();
-	}
-
-	public CategoryDTO(String code, String name) {
-		super();
-		this.code = code;
-		this.name = name;
-	}
-	
-	public CategoryDTO(Category category) {
-		super();
+	public CategoryDTO(Category category) {		
 		this.code = category.getCode();
 		this.name = category.getName();
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
 	}
 }

@@ -3,31 +3,26 @@ package br.com.als.mymoney.api.domain.model.dto;
 import javax.validation.constraints.NotBlank;
 
 import br.com.als.mymoney.api.domain.model.Category;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString
 public class CategoryDTOCodeNonNull {
 
+	@EqualsAndHashCode.Include
 	@NotBlank
 	private String code;
 
-	public CategoryDTOCodeNonNull() {
-		super();
-	}
-
-	public CategoryDTOCodeNonNull(String code) {
-		super();
-		this.code = code;
-	}
-
 	public CategoryDTOCodeNonNull(Category category) {
-		super();
 		this.code = category.getCode();
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
 	}
 }

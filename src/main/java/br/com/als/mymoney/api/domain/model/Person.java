@@ -1,6 +1,5 @@
 package br.com.als.mymoney.api.domain.model;
 
-import java.util.Objects;
 import java.util.UUID;
 
 import javax.persistence.Embedded;
@@ -11,35 +10,46 @@ import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString
 @Entity
 @Table(name = "person")
 public class Person {
 
+	@EqualsAndHashCode.Include
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Getter
+	@Setter
 	private Long id;
 
+	@Getter
 	private String code;
+
+	@Getter
+	@Setter
 	private String name;
+	
+	@Setter
 	private Boolean active;
 
 	@Embedded
+	@Getter
+	@Setter
 	private Address address;
 
-	public Person() {
-		super();
-	}
-
 	public Person(Long id, String name, Boolean active, Address address) {
-		super();
 		this.id = id;
 		this.name = name;
 		this.active = active;
 		this.address = address;
-	}
-
-	public String getCode() {
-		return code;
 	}
 
 	@PrePersist
@@ -47,58 +57,7 @@ public class Person {
 		this.code = UUID.randomUUID().toString();
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public Boolean isActive() {
 		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
-
-	public Address getAddress() {
-		return address;
-	}
-
-	public void setAddress(Address address) {
-		this.address = address;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Person other = (Person) obj;
-		return Objects.equals(id, other.id);
-	}
-
-	@Override
-	public String toString() {
-		return "Person [id=" + id + ", code=" + code + ", name=" + name + ", active=" + active + ", address=" + address
-				+ "]";
 	}
 }

@@ -5,64 +5,43 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import br.com.als.mymoney.api.domain.model.Address;
 import br.com.als.mymoney.api.domain.model.Person;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString
 @JsonInclude(Include.NON_NULL)
 public class PersonDTO {
 
+	@Getter
+	@EqualsAndHashCode.Include
 	private String code;
+	
+	@Getter
 	private String name;
+		
 	private Boolean active;
+	
+	@Getter
 	private Address address;
 
-	public PersonDTO() {
-		super();
-	}
-
-	public PersonDTO(String code, String name, Boolean active, Address address) {
-		super();
-		this.code = code;
-		this.name = name;
-		this.active = active;
-		this.address = address;
-	}
-
-	public PersonDTO(Person person) {
-		super();
+	public PersonDTO(Person person) {		
 		this.code = person.getCode();
 		this.name = person.getName();
 		this.active = person.isActive();
 		this.address = person.getAddress();
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
 	public Boolean isActive() {
 		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
-
-	public Address getAddress() {
-		return address;
-	}
-
-	public void setAddress(Address address) {
-		this.address = address;
 	}
 }

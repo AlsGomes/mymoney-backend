@@ -6,32 +6,29 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import br.com.als.mymoney.api.domain.model.Person;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString
 @JsonInclude(Include.NON_NULL)
 public class PersonDTOCodeNonNull {
 
+	@EqualsAndHashCode.Include
 	@NotBlank
 	private String code;
 
-	public PersonDTOCodeNonNull() {
-		super();
-	}
-
-	public PersonDTOCodeNonNull(String code) {
-		super();
-		this.code = code;
-	}
-
 	public PersonDTOCodeNonNull(Person person) {
-		super();
 		this.code = person.getCode();
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
 	}
 }
