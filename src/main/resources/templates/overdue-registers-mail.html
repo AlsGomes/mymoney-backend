@@ -1,0 +1,40 @@
+<html>
+
+<body style="font-family: Arial; font-size: 14px;">
+
+	<p>Olá!</p>
+
+	<p>Existem receitas ou despesas vencidas ou vencendo hoje. Veja:</p>
+
+	<p>
+	<table style="width: 100%; border-collapse: collapse;  margin: 20px 0">
+		<thead>
+			<tr>
+				<th>Tipo</th>
+				<th>Pessoa</th>
+				<th>Descrição</th>
+				<th>Vencimento</th>
+				<th>Valor</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<#list registers as register>
+				<tr style="border-bottom: 1px solid #ccc; border-top: 1px solid #ccc;">
+					<td>${register.type.text}</td>
+					<td>${register.person.name}</td>
+					<td>${register.description}</td>
+					<td style="text-align: center">${register.dueDate}</td>
+					<td style="text-align: right">${register.value?string.currency}</td>
+				</tr>
+			</#list>
+		</tbody>
+	</table>
+	</p>
+
+	<p>Obrigado.</p>
+	<p>Equipe MyMoney!</p>
+
+</body>
+
+</html>

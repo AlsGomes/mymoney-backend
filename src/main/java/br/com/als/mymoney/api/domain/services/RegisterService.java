@@ -90,6 +90,13 @@ public class RegisterService {
 		return listDTO;
 	}
 
+	public List<RegisterDTO> findOverdueRegisters() {
+		List<Register> list = repository.findByDueDateLessThanEqualAndPaymentDateIsNullOrderByType(LocalDate.now());
+		List<RegisterDTO> listDTO = list.stream().map(RegisterDTO::new).collect(Collectors.toList());
+	
+		return listDTO;
+	}
+
 	public SimplePage<RegisterDTO> search(RegisterFilter filter, Pageable pageable) {
 		if (!filter.isValidDate())
 			throw new DomainException("Vencimento Até, precisa ser maior do que Vencimento De");

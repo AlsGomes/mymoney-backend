@@ -36,7 +36,7 @@ public class RegisterDTO {
 	private CategoryDTO category;
 	private PersonDTO person;
 
-	public RegisterDTO(Register register) {		
+	public RegisterDTO(Register register) {
 		this.code = register.getCode();
 		this.description = register.getDescription();
 		this.dueDate = register.getDueDate().toString();
