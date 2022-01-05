@@ -3,6 +3,8 @@ package br.com.als.mymoney.api.domain.services;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +15,7 @@ import br.com.als.mymoney.api.domain.assemblers.PersonAssembler;
 import br.com.als.mymoney.api.domain.controllers.utils.SimplePage;
 import br.com.als.mymoney.api.domain.disassemblers.PersonDisassembler;
 import br.com.als.mymoney.api.domain.model.Address;
+import br.com.als.mymoney.api.domain.model.Contact;
 import br.com.als.mymoney.api.domain.model.Person;
 import br.com.als.mymoney.api.domain.model.dto.PersonDTO;
 import br.com.als.mymoney.api.domain.model.dto.PersonDTOInsert;
@@ -40,9 +43,7 @@ public class PersonService {
 		Person obj = repository.findByCode(code)
 				.orElseThrow(() -> new ObjectNotFoundException("Pessoa não encontrada"));
 
-		PersonDTO objDTO = disassembler.toPersonDTO(obj);
-		BeanUtils.copyProperties(obj, objDTO);
-
+		PersonDTO objDTO = new PersonDTO(obj);
 		return objDTO;
 	}
 
@@ -63,18 +64,26 @@ public class PersonService {
 	}
 
 	public SimplePage<PersonDTO> search(String name, Pageable pageable) {
-		Page<PersonDTO> pageDTO = repository.findByNameContaining(name, pageable);
-		SimplePage<PersonDTO> simplePageDTO = new SimplePage<>(pageDTO);				
+		Page<Person> list = repository.findByNameContaining(name, pageable);
+		Page<PersonDTO> listDTO = list.map(PersonDTO::new);
+
+		SimplePage<PersonDTO> simplePageDTO = new SimplePage<>(listDTO);
 		return simplePageDTO;
 	}
 
+	@Transactional
 	public PersonDTO saveNew(PersonDTOInsert objDTOInsert) {
 		if (objDTOInsert.getActive() == null)
 			objDTOInsert.setActive(true);
 
-		Person obj = assembler.toPerson(objDTOInsert);
-		obj = repository.save(obj);
-		PersonDTO objDTO = disassembler.toPersonDTO(obj);
+		final Person obj = assembler.toPerson(objDTOInsert);
+		var newContacts = objDTOInsert.getContacts().stream()
+				.map(contact -> new Contact(null, contact.getName(), contact.getEmail(), contact.getTelephone(), obj))
+				.collect(Collectors.toList());
+		obj.getContacts().addAll(newContacts);		
+
+		var savedPerson = repository.save(obj);
+		PersonDTO objDTO = new PersonDTO(savedPerson);
 		return objDTO;
 	}
 
@@ -92,7 +101,7 @@ public class PersonService {
 		Person obj = findByCodeOrThrowAsPerson(objDTOUpdate.getCode());
 
 		// Implementado com BeanUtils, pois, não é necessário criar DTOs para essa entidade Embedded
-		// CopyProperties satifaz a necessidade		
+		// CopyProperties satifaz a necessidade
 		if (objDTOUpdate.getAddress() == null) {
 			obj.setAddress(null);
 		} else if (obj.getAddress() == null) {
@@ -103,7 +112,7 @@ public class PersonService {
 		}
 
 		Person updatedObj = repository.save(obj);
-		PersonDTO objDTO = disassembler.toPersonDTO(updatedObj);		
+		PersonDTO objDTO = disassembler.toPersonDTO(updatedObj);
 		return objDTO;
 	}
 
@@ -120,5 +129,4 @@ public class PersonService {
 		Person obj = findByCodeOrThrowAsPerson(code);
 		repository.delete(obj);
 	}
-
 }

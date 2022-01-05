@@ -1,0 +1,9 @@
+CREATE TABLE contact (
+	id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,    
+    code VARCHAR(36) UNIQUE NOT NULL,
+    id_person BIGINT(20) NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    telephone VARCHAR(20) NOT NULL,
+    FOREIGN KEY (id_person) REFERENCES person(id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;

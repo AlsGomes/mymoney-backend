@@ -1,16 +1,13 @@
 package br.com.als.mymoney.api.domain.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
@@ -21,51 +18,45 @@ import lombok.Setter;
 import lombok.ToString;
 
 @NoArgsConstructor
+@Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 @Entity
-@Table(name = "person")
-public class Person {
+@Table(name = "contact")
+public class Contact {
 
+	@Setter
 	@EqualsAndHashCode.Include
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Getter
-	@Setter
 	private Long id;
 
-	@Getter
 	private String code;
 
-	@Getter
 	@Setter
 	private String name;
 
 	@Setter
-	private Boolean active;
+	private String email;
 
-	@Embedded
-	@Getter
 	@Setter
-	private Address address;
+	private String telephone;
 
-	@Getter
-	@OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
-	private final List<Contact> contacts = new ArrayList<>();
+	@Setter
+	@ManyToOne
+	@JoinColumn(name = "id_person")
+	private Person person;
 
-	public Person(Long id, String name, Boolean active, Address address) {
+	public Contact(Long id, String name, String email, String telephone, Person person) {
 		this.id = id;
 		this.name = name;
-		this.active = active;
-		this.address = address;
+		this.email = email;
+		this.telephone = telephone;
+		this.person = person;
 	}
 
 	@PrePersist
 	private void setCode() {
 		this.code = UUID.randomUUID().toString();
-	}
-
-	public Boolean isActive() {
-		return active;
 	}
 }

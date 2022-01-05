@@ -1,6 +1,6 @@
 set foreign_key_checks=0;
 
-lock tables category write, person write, registers write, user write, permission write, user_permission write;
+lock tables category write, person write, registers write, user write, permission write, user_permission write, contact write;
 
 TRUNCATE TABLE category;
 TRUNCATE TABLE person;
@@ -8,6 +8,7 @@ TRUNCATE TABLE registers;
 TRUNCATE TABLE user;
 TRUNCATE TABLE permission;
 TRUNCATE TABLE user_permission;
+TRUNCATE TABLE contact;
 
 set foreign_key_checks=1;
 
@@ -64,5 +65,8 @@ INSERT INTO user_permission (id_user, id_permission) values (1, 8);
 -- maria
 INSERT INTO user_permission (id_user, id_permission) values (2, 2);
 INSERT INTO user_permission (id_user, id_permission) values (2, 8);
+
+INSERT INTO contact (code, id_person, name, email, telephone) values ('8da9902a-0a78-4c43-9edb-9b68eb141881', 1, 'Marcos Henrique', 'marcos@algamoney.com', '(11) 93302-1071');
+INSERT INTO contact (code, id_person, name, email, telephone) values ('1579fk9t-0a78-4c43-gk5i-9b68eb141881', 2, 'Katiusa', 'katiusa@algamoney.com', '(11) 00000-0000');
 
 unlock tables;
