@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import br.com.als.mymoney.api.domain.model.dto.PersonDTO;
 import br.com.als.mymoney.api.domain.model.dto.PersonDTOInsert;
 import br.com.als.mymoney.api.domain.model.dto.PersonDTOUpdate;
 import br.com.als.mymoney.api.domain.model.dto.PersonDTOUpdateAddress;
+import br.com.als.mymoney.api.domain.model.dto.PersonDTOUpdateContacts;
 import br.com.als.mymoney.api.domain.repositories.PersonRepository;
 import br.com.als.mymoney.api.domain.services.exceptions.ObjectNotFoundException;
 
@@ -80,13 +82,14 @@ public class PersonService {
 		var newContacts = objDTOInsert.getContacts().stream()
 				.map(contact -> new Contact(null, contact.getName(), contact.getEmail(), contact.getTelephone(), obj))
 				.collect(Collectors.toList());
-		obj.getContacts().addAll(newContacts);		
+		obj.getContacts().addAll(newContacts);
 
 		var savedPerson = repository.save(obj);
 		PersonDTO objDTO = new PersonDTO(savedPerson);
 		return objDTO;
 	}
 
+	@Transactional
 	public PersonDTO update(PersonDTOUpdate objDTOUpdate) {
 		Person obj = findByCodeOrThrowAsPerson(objDTOUpdate.getCode());
 
@@ -97,6 +100,7 @@ public class PersonService {
 		return objDTO;
 	}
 
+	@Transactional
 	public PersonDTO updateAddress(PersonDTOUpdateAddress objDTOUpdate) {
 		Person obj = findByCodeOrThrowAsPerson(objDTOUpdate.getCode());
 
@@ -116,6 +120,20 @@ public class PersonService {
 		return objDTO;
 	}
 
+	@Transactional
+	public PersonDTO updateContacts(@Valid PersonDTOUpdateContacts objDTO, String code) {
+		final Person obj = findByCodeOrThrowAsPerson(code);
+		obj.getContacts().clear();
+		var newContacts = objDTO.getContacts().stream()
+				.map(contact -> new Contact(null, contact.getName(), contact.getEmail(), contact.getTelephone(), obj))
+				.collect(Collectors.toList());
+		obj.getContacts().addAll(newContacts);
+
+		Person updatedObj = repository.save(obj);
+		return new PersonDTO(updatedObj);
+	}
+
+	@Transactional
 	public PersonDTO updateActive(String code, Boolean active) {
 		Person obj = findByCodeOrThrowAsPerson(code);
 		obj.setActive(active);
@@ -125,6 +143,7 @@ public class PersonService {
 		return objDTO;
 	}
 
+	@Transactional
 	public void deleteByCode(String code) {
 		Person obj = findByCodeOrThrowAsPerson(code);
 		repository.delete(obj);

@@ -26,6 +26,7 @@ import br.com.als.mymoney.api.domain.model.dto.PersonDTO;
 import br.com.als.mymoney.api.domain.model.dto.PersonDTOInsert;
 import br.com.als.mymoney.api.domain.model.dto.PersonDTOUpdate;
 import br.com.als.mymoney.api.domain.model.dto.PersonDTOUpdateAddress;
+import br.com.als.mymoney.api.domain.model.dto.PersonDTOUpdateContacts;
 import br.com.als.mymoney.api.domain.services.PersonService;
 import br.com.als.mymoney.api.events.ResourceCreatedEvent;
 
@@ -95,6 +96,16 @@ public class PersonController {
 		return ResponseEntity.ok(objUpdated);
 	}
 	
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and hasAuthority('SCOPE_write')")
+	@PutMapping(path = "/{code}/contacts")
+	public ResponseEntity<PersonDTO> updateContacts(
+			@PathVariable String code, 
+			@RequestBody @Valid PersonDTOUpdateContacts objDTO) {
+				
+		PersonDTO objUpdated = service.updateContacts(objDTO, code);
+		return ResponseEntity.ok(objUpdated);
+	}
+
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and hasAuthority('SCOPE_write')")
 	@PutMapping(path = "/{code}/active")
 	public ResponseEntity<PersonDTO> updateActive(

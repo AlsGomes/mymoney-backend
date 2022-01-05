@@ -50,7 +50,7 @@ public class Person {
 	private Address address;
 
 	@Getter
-	@OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
 	private final List<Contact> contacts = new ArrayList<>();
 
 	public Person(Long id, String name, Boolean active, Address address) {
