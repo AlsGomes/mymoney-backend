@@ -39,6 +39,8 @@ public class ModelMapperConfig {
 
 		typeMapInsert.addMappings(mapper -> mapper.using(parseToDateConverter).map(RegisterDTOInsert::getPaymentDate,
 				Register::setPaymentDate));
+		
+		typeMapInsert.addMappings(mapper -> mapper.skip(Register::setFiles));
 
 		var typeMapUpdate = modelMapper.createTypeMap(RegisterDTOUpdate.class, Register.class);
 		typeMapUpdate.addMappings(
@@ -46,6 +48,8 @@ public class ModelMapperConfig {
 		
 		typeMapUpdate.addMappings(mapper -> mapper.using(parseToDateConverter).map(RegisterDTOUpdate::getPaymentDate,
 				Register::setPaymentDate));
+		
+		typeMapUpdate.addMappings(mapper -> mapper.skip(Register::setFiles));
 	}
 
 	private void mapToDisassembleRegister(ModelMapper modelMapper) {

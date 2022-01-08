@@ -1,6 +1,8 @@
 package br.com.als.mymoney.api.domain.model.dto;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -35,6 +37,7 @@ public class RegisterDTO {
 	private RegisterType type;
 	private CategoryDTO category;
 	private PersonDTO person;
+	private List<RegisterFileDTO> files;
 
 	public RegisterDTO(Register register) {
 		this.code = register.getCode();
@@ -46,5 +49,10 @@ public class RegisterDTO {
 		this.type = register.getType();
 		this.category = new CategoryDTO(register.getCategory());
 		this.person = new PersonDTO(register.getPerson());
+
+		if (register.getFiles() != null && !register.getFiles().isEmpty()) {
+			this.files = new ArrayList<>();
+			register.getFiles().forEach(r -> this.files.add(new RegisterFileDTO(r)));
+		}
 	}
 }

@@ -97,7 +97,7 @@ public class RegisterController {
 
 	@PreAuthorize("hasAuthority('ROLE_REMOVER_LANCAMENTO') and hasAuthority('SCOPE_write')")
 	@DeleteMapping(path = "/{code}")
-	public ResponseEntity<Void> delete(@PathVariable String code) {		
+	public ResponseEntity<Void> delete(@PathVariable String code) {
 		service.delete(code);
 		return ResponseEntity.noContent().build();
 	}

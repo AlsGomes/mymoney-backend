@@ -1,6 +1,6 @@
 set foreign_key_checks=0;
 
-lock tables category write, person write, registers write, user write, permission write, user_permission write, contact write;
+lock tables category write, person write, registers write, user write, permission write, user_permission write, contact write, register_files write;
 
 TRUNCATE TABLE category;
 TRUNCATE TABLE person;
@@ -9,6 +9,7 @@ TRUNCATE TABLE user;
 TRUNCATE TABLE permission;
 TRUNCATE TABLE user_permission;
 TRUNCATE TABLE contact;
+TRUNCATE TABLE register_files;
 
 set foreign_key_checks=1;
 

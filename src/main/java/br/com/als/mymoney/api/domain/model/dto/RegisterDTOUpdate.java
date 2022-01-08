@@ -1,6 +1,8 @@
 package br.com.als.mymoney.api.domain.model.dto;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.DecimalMin;
@@ -59,4 +61,7 @@ public class RegisterDTOUpdate {
 	@NotNull
 	@Valid
 	private PersonDTOCodeNonNull person;
+
+	@Valid
+	private final List<RegisterFileDTOUpdate> files = new ArrayList<>();
 }

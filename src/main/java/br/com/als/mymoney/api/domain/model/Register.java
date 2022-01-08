@@ -2,8 +2,10 @@ package br.com.als.mymoney.api.domain.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -12,9 +14,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +26,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
@@ -36,7 +41,7 @@ public class Register {
 	private Long id;
 
 	private String code;
-	
+
 	@Setter
 	private String description;
 
@@ -66,29 +71,10 @@ public class Register {
 	@JoinColumn(name = "id_person")
 	private Person person;
 
-	public Register(
-			Long id, 
-			String code, 
-			String description, 
-			LocalDate dueDate, 
-			LocalDate paymentDate,
-			BigDecimal value, 
-			String obs, 
-			RegisterType type, 
-			Category category, 
-			Person person) {		
-		this.id = id;
-		this.code = code;
-		this.description = description;
-		this.dueDate = dueDate;
-		this.paymentDate = paymentDate;
-		this.value = value;
-		this.obs = obs;
-		this.type = type;
-		this.category = category;
-		this.person = person;
-	}
-	
+	@Setter
+	@OneToMany(mappedBy = "register", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<RegisterFile> files;
+
 	@PrePersist
 	private void setCode() {
 		this.code = UUID.randomUUID().toString();

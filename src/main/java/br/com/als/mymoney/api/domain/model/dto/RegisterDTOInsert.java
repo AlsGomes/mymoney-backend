@@ -1,6 +1,8 @@
 package br.com.als.mymoney.api.domain.model.dto;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.validation.Valid;
 import javax.validation.constraints.DecimalMin;
@@ -59,4 +61,6 @@ public class RegisterDTOInsert {
 	@NotNull
 	@Valid
 	private PersonDTOCodeNonNull person;
+
+	private final Set<String> files = new HashSet<>();
 }

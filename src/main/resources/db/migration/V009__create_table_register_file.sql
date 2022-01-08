@@ -1,0 +1,10 @@
+CREATE TABLE register_files (
+	id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
+    code VARCHAR(36) NOT NULL UNIQUE,
+    file_name VARCHAR(150) NOT NULL UNIQUE,
+    content_type VARCHAR(80) NOT NULL,
+    size BIGINT NOT NULL DEFAULT 0,
+    id_register BIGINT(20) NOT NULL,
+    FOREIGN KEY (id_register) REFERENCES registers(id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
