@@ -1,4 +1,4 @@
-package br.com.als.mymoney.api.domain.disassemblers;
+package br.com.als.mymoney.api.disassemblers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

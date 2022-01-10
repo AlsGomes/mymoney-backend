@@ -12,9 +12,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import br.com.als.mymoney.api.domain.assemblers.PersonAssembler;
-import br.com.als.mymoney.api.domain.controllers.utils.SimplePage;
-import br.com.als.mymoney.api.domain.disassemblers.PersonDisassembler;
+import br.com.als.mymoney.api.assemblers.PersonAssembler;
+import br.com.als.mymoney.api.controllers.utils.SimplePage;
+import br.com.als.mymoney.api.disassemblers.PersonDisassembler;
 import br.com.als.mymoney.api.domain.model.Address;
 import br.com.als.mymoney.api.domain.model.Contact;
 import br.com.als.mymoney.api.domain.model.Person;

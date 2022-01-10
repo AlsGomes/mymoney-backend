@@ -1,4 +1,4 @@
-package br.com.als.mymoney.api.domain.controllers.utils;
+package br.com.als.mymoney.api.controllers.utils;
 
 import java.util.List;
 

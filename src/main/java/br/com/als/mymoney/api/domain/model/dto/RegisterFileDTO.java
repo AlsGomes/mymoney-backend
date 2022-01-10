@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import br.com.als.mymoney.api.domain.model.RegisterFile;
 import br.com.als.mymoney.api.domain.model.dto.validation.FileContentType;
 import br.com.als.mymoney.api.domain.model.dto.validation.FileSize;
+import br.com.als.mymoney.api.domain.services.FileStorageService;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -45,5 +46,11 @@ public class RegisterFileDTO {
 		this.size = registerFile.getSize();
 		this.contentType = registerFile.getContentType();
 		this.code = registerFile.getCode();
+	}
+
+	public RegisterFileDTO(FileStorageService.File file) {
+		this.fileName = file.getFileName();
+		this.size = file.getSize();
+		this.contentType = file.getContentType();
 	}
 }

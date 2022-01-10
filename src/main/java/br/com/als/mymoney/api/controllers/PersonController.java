@@ -1,4 +1,4 @@
-package br.com.als.mymoney.api.domain.controllers;
+package br.com.als.mymoney.api.controllers;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.als.mymoney.api.domain.controllers.utils.SimplePage;
+import br.com.als.mymoney.api.controllers.utils.SimplePage;
 import br.com.als.mymoney.api.domain.model.dto.PersonDTO;
 import br.com.als.mymoney.api.domain.model.dto.PersonDTOInsert;
 import br.com.als.mymoney.api.domain.model.dto.PersonDTOUpdate;

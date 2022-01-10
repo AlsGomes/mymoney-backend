@@ -9,6 +9,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -72,7 +73,7 @@ public class Register {
 	private Person person;
 
 	@Setter
-	@OneToMany(mappedBy = "register", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "register", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<RegisterFile> files;
 
 	@PrePersist

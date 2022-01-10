@@ -24,6 +24,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.als.mymoney.api.core.infrastructure.service.storage.StorageException;
 import br.com.als.mymoney.api.domain.services.exceptions.DomainException;
 import br.com.als.mymoney.api.domain.services.exceptions.ObjectNotFoundException;
 
@@ -53,6 +54,19 @@ public class APIExceptionHandler extends ResponseEntityExceptionHandler {
 		StandardError error = getStandardErrorInfo(
 				status,
 				"domain-exception",
+				ex.getMessage(),
+				"Não foi possível processar sua solicitação");
+		
+		return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
+	}
+	
+	@ExceptionHandler(StorageException.class)
+	public ResponseEntity<?> handleStorageException(StorageException ex, WebRequest request) {
+		var status = HttpStatus.CONFLICT;
+		
+		StandardError error = getStandardErrorInfo(
+				status,
+				"storage-exception",
 				ex.getMessage(),
 				"Não foi possível processar sua solicitação");
 		

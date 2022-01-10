@@ -21,4 +21,5 @@ public interface RegisterRepositoryQuery {
 	List<RegisterStatisticsByDay> byDay(LocalDate monthReference);
 
 	List<RegisterStatisticsByPerson> byPerson(LocalDate dateFrom, LocalDate dateUntil);
+
 }

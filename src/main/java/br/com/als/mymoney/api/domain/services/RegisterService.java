@@ -1,16 +1,8 @@
 package br.com.als.mymoney.api.domain.services;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -21,11 +13,10 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
-import br.com.als.mymoney.api.domain.assemblers.RegisterAssembler;
-import br.com.als.mymoney.api.domain.controllers.utils.SimplePage;
+import br.com.als.mymoney.api.assemblers.RegisterAssembler;
+import br.com.als.mymoney.api.controllers.utils.SimplePage;
 import br.com.als.mymoney.api.domain.model.Category;
 import br.com.als.mymoney.api.domain.model.Person;
 import br.com.als.mymoney.api.domain.model.Register;
@@ -34,10 +25,11 @@ import br.com.als.mymoney.api.domain.model.dto.RegisterDTO;
 import br.com.als.mymoney.api.domain.model.dto.RegisterDTOInsert;
 import br.com.als.mymoney.api.domain.model.dto.RegisterDTOSummary;
 import br.com.als.mymoney.api.domain.model.dto.RegisterDTOUpdate;
+import br.com.als.mymoney.api.domain.model.dto.RegisterFileDTO;
 import br.com.als.mymoney.api.domain.model.dto.statistics.RegisterStatisticsByCategory;
 import br.com.als.mymoney.api.domain.model.dto.statistics.RegisterStatisticsByDay;
-import br.com.als.mymoney.api.domain.repositories.RegisterRepository;
 import br.com.als.mymoney.api.domain.repositories.filters.RegisterFilter;
+import br.com.als.mymoney.api.domain.repositories.register.RegisterRepository;
 import br.com.als.mymoney.api.domain.services.exceptions.DomainException;
 import br.com.als.mymoney.api.domain.services.exceptions.ObjectNotFoundException;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -59,16 +51,9 @@ public class RegisterService {
 
 	@Autowired
 	private CategoryService categoryService;
-
-	private Person findPerson(String personCode) {
-		Person obj = personService.findByCodeOrThrowAsPerson(personCode);
-		return obj;
-	}
-
-	private Category findCategory(String code) {
-		Category obj = categoryService.findByCodeOrThrowAsCategory(code);
-		return obj;
-	}
+	
+	@Autowired
+	private FileStorageService fileStorageService;
 
 	public RegisterDTO findByCodeOrThrow(String code) {
 		if (code == null)
@@ -86,7 +71,7 @@ public class RegisterService {
 			throw new ObjectNotFoundException("Lançamento não encontrado");
 
 		Register obj = repository.findByCode(code)
-				.orElseThrow(() -> new ObjectNotFoundException("Lancamento não encontrado"));
+				.orElseThrow(() -> new ObjectNotFoundException("Lançamento não encontrado"));
 
 		return obj;
 	}
@@ -103,6 +88,15 @@ public class RegisterService {
 		List<RegisterDTO> listDTO = list.stream().map(RegisterDTO::new).collect(Collectors.toList());
 	
 		return listDTO;
+	}
+	
+	public RegisterFileDTO findRegisterFileByFileName(String registerCode, String registerFileCode) {
+		var register = findByCodeOrThrowAsRegister(registerCode);
+		var registerFile = repository.findRegisterFileByFileName(register.getId(), registerFileCode)
+				.orElseThrow(() -> new ObjectNotFoundException("Arquivo do registro não encontrado"));
+		var dto = new RegisterFileDTO(registerFile);
+
+		return dto;
 	}
 
 	public SimplePage<RegisterDTO> search(RegisterFilter filter, Pageable pageable) {
@@ -139,7 +133,8 @@ public class RegisterService {
 		final var newRegister = assembler.toRegister(objDTO);
 
 		if (!objDTO.getFiles().isEmpty()) {
-			List<RegisterFile> files = objDTO.getFiles().stream().map(this::getTemporaryFile)
+			List<RegisterFile> files = objDTO.getFiles().stream()
+					.map(this::getTemporaryFile)
 					.collect(Collectors.toList());
 			newRegister.setFiles(new ArrayList<>());
 			newRegister.getFiles().addAll(files);
@@ -148,7 +143,9 @@ public class RegisterService {
 
 		newRegister.setPerson(person);
 		newRegister.setCategory(category);
+		
 		var savedRegister = repository.save(newRegister);
+		repository.flush();
 		
 		makePermanent(savedRegister.getFiles());
 
@@ -161,10 +158,14 @@ public class RegisterService {
 		final var register = findByCodeOrThrowAsRegister(code);
 		final var person = findPerson(objDTO.getPerson().getCode());
 		final var category = findCategory(objDTO.getCategory().getCode());
-
+		final var hasFiles = !objDTO.getFiles().isEmpty();
+		
 		assembler.toRegister(objDTO, register);
 
-		if (!objDTO.getFiles().isEmpty()) {
+		List<RegisterFile> newFilesAsRegisterFile = null;
+		List<RegisterFile> filesToDelete = null;
+		
+		if (hasFiles) {
 			var newFiles = objDTO.getFiles().stream()
 					.filter(f -> f.getCode() == null)
 					.collect(Collectors.toList());
@@ -174,36 +175,46 @@ public class RegisterService {
 					.map(f -> f.getCode())
 					.collect(Collectors.toList());
 
-			var newFilesAsRegisterFile = newFiles.stream()
+			newFilesAsRegisterFile = newFiles.stream()
 					.map(newFile -> getTemporaryFile(newFile.getFileName()))
 					.collect(Collectors.toList());
 			newFilesAsRegisterFile.forEach(rf -> rf.setRegister(register));
-			makePermanent(newFilesAsRegisterFile);
-
+			
 			if (register.getFiles() == null)
 				register.setFiles(new ArrayList<>());
 
-			var filesToDelete = register.getFiles().stream()
+			filesToDelete = register.getFiles().stream()
 					.filter(file -> !existingFilesCodes.contains(file.getCode()))
 					.collect(Collectors.toList());
 			
 			for (var fileToDelete : filesToDelete) {
 				register.getFiles().remove(fileToDelete);
-				deleteFile(register.getCode(), fileToDelete.getFileName());
 			}
 
 			register.getFiles().addAll(newFilesAsRegisterFile);
 		} else {
 			if (register.getFiles() != null)
 				register.getFiles().clear();
-
-			deleteFiles(code);
 		}
 
 		register.setCategory(category);
 		register.setPerson(person);
 
-		var updatedRegister = repository.save(register);		
+		var updatedRegister = repository.save(register);
+		repository.flush();
+		
+		if (newFilesAsRegisterFile != null)
+			makePermanent(newFilesAsRegisterFile);
+		
+		if (filesToDelete != null) {
+			for (var fileToDelete : filesToDelete) {
+				fileStorageService.deleteFile(register.getCode(), fileToDelete.getFileName());
+			}
+		}
+		
+		if (!hasFiles)
+			fileStorageService.deleteFiles(code);
+
 		var registerDTO = new RegisterDTO(updatedRegister);
 		return registerDTO;
 	}
@@ -211,8 +222,10 @@ public class RegisterService {
 	@Transactional
 	public void delete(String code) {
 		var register = findByCodeOrThrowAsRegister(code);
-		repository.delete(register);		
-		deleteFiles(code);		
+		repository.delete(register);	
+		repository.flush();
+		
+		fileStorageService.deleteFiles(code);		
 	}
 
 	public List<RegisterStatisticsByCategory> statisticsByCategory(LocalDate date) {
@@ -252,127 +265,25 @@ public class RegisterService {
 		return JasperExportManager.exportReportToPdf(jasperPrint);
 	}
 
-	private RegisterFile getTemporaryFile(String fileName) {
-		var fullPath = "C:\\Users\\als_0\\Downloads\\docs\\" + fileName;
-	
-		try {
-			var file = new File(fullPath);
-			if (!file.exists())
-				throw new FileNotFoundException();
-	
-			var code = file.getName().split("_")[0];
-			var name = file.getName();
-			var size = file.length();
-			var extension = name.substring(name.lastIndexOf(".")).toLowerCase();			
-			var contentType = "";
-	
-			switch (extension) {
-			case ".pdf":
-				contentType = MediaType.APPLICATION_PDF_VALUE;
-				break;
-			case ".png":
-				contentType = MediaType.IMAGE_PNG_VALUE;
-				break;
-			case ".jpeg":
-				contentType = MediaType.IMAGE_JPEG_VALUE;
-				break;
-			default:
-				break;		
-			}
-	
-			var registerFile = new RegisterFile();
-			registerFile.setCode(code);
-			registerFile.setContentType(contentType);
-			registerFile.setFileName(name);
-			registerFile.setSize(size);
-			return registerFile;
-	
-		} catch (FileNotFoundException e) {
-			throw new DomainException(String.format("Erro ao buscar o arquivo %s, enquanto tentava buscar", fullPath), e);
-		}
+	private Person findPerson(String personCode) {
+		Person obj = personService.findByCodeOrThrowAsPerson(personCode);
+		return obj;
+	}
+
+	private Category findCategory(String code) {
+		Category obj = categoryService.findByCodeOrThrowAsCategory(code);
+		return obj;
+	}
+
+	private RegisterFile getTemporaryFile(String fileName) {		
+		FileStorageService.File file = fileStorageService.getTemporaryInfo(fileName);
+		var registerFile = new RegisterFile(file);
+		return registerFile;		
 	}
 
 	private void makePermanent(List<RegisterFile> files) {
-		var root = "C:\\Users\\als_0\\Downloads\\docs\\";
 		for (var file : files) {
-			var fullPath = root + file.getFileName();
-			var tempFile = new File(fullPath);
-
-			try {
-				if (!tempFile.exists())
-					throw new FileNotFoundException();
-			} catch (FileNotFoundException e) {
-				System.out.println("FileNotFoundException: ");
-				e.printStackTrace();
-				throw new DomainException(
-						String.format("Erro ao buscar o arquivo %s, enquanto tentava tornar permanente", fullPath), e);
-			}
-
-			var outFolder = root + file.getRegister().getCode();
-			try (InputStream in = new FileInputStream(tempFile)) {
-				var outFile = new File(outFolder);
-				if (!outFile.exists())
-					outFile.mkdirs();
-
-				try (OutputStream out = new FileOutputStream(outFolder + "\\" + file.getFileName())) {
-					out.write(in.readAllBytes());
-				} catch (IOException e) {
-					e.printStackTrace();
-					throw new DomainException(
-							String.format("Erro ao buscar o arquivo %s, enquanto tentava tornar permanente", fullPath),
-							e);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-				throw new DomainException(
-						String.format("Erro ao buscar o arquivo %s, enquanto tentava tornar permanente", fullPath), e);
-			}
-		}
-
-		for (var file : files) {
-			var fullPath = root + file.getFileName();
-			var tempFile = new File(fullPath);
-			tempFile.delete();
-		}
-	}
-
-	private void deleteFiles(String code) {
-		var folder = new File("C:\\Users\\als_0\\Downloads\\docs\\" + code);
-	
-		if (!folder.exists())
-			return;						
-		
-		Arrays.asList(folder.listFiles()).stream().forEach(File::delete);
-		folder.delete();
-	}
-
-	private void deleteFile(String code, String fileName) {
-		var file = new File("C:\\Users\\als_0\\Downloads\\docs\\" + code + "\\" + fileName);
-	
-		try {
-			if (!file.exists())
-				throw new FileNotFoundException();
-		} catch (FileNotFoundException e) {
-			throw new DomainException("O arquivo %s não existe", e);
-		}
-				
-		file.delete();
-		
-		if (file.getParentFile().listFiles().length == 0) {
-			file.getParentFile().delete();
-		}		
-	}
-
-	private void deleteFileIfExists(String code, String fileName) {
-		var file = new File("C:\\Users\\als_0\\Downloads\\docs\\" + code + "\\" + fileName);
-
-		if (!file.exists())
-			return;
-
-		file.delete();
-
-		if (file.getParentFile().listFiles().length == 0) {
-			file.getParentFile().delete();
+			fileStorageService.makePermanent(file.getRegister().getCode(), file.getFileName());
 		}
 	}
 }

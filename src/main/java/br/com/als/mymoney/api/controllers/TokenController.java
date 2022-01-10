@@ -1,4 +1,4 @@
-package br.com.als.mymoney.api.domain.controllers;
+package br.com.als.mymoney.api.controllers;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;

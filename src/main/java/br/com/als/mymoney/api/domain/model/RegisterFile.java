@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import br.com.als.mymoney.api.domain.model.dto.RegisterFileDTO;
+import br.com.als.mymoney.api.domain.services.FileStorageService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,5 +40,12 @@ public class RegisterFile {
 		this.contentType = registerFile.getContentType();
 		this.fileName = registerFile.getFileName();
 		this.size = registerFile.getSize();
+	}
+
+	public RegisterFile(FileStorageService.File file) {
+		this.code = file.getFileName().split("_")[0];
+		this.fileName = file.getFileName();
+		this.contentType = file.getContentType();
+		this.size = file.getSize();
 	}
 }

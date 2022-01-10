@@ -1,4 +1,4 @@
-package br.com.als.mymoney.api.domain.controllers;
+package br.com.als.mymoney.api.controllers;
 
 import java.time.LocalDate;
 import java.util.List;

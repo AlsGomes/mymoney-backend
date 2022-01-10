@@ -110,7 +110,7 @@ public class RegisterRepositoryImpl implements RegisterRepositoryQuery {
 
 		return manager.createQuery(criteriaQuery).getResultList();
 	}
-
+	
 	private Predicate[] createPredicates(Root<Register> root, CriteriaBuilder builder, RegisterFilter filter) {
 		List<Predicate> predicates = new ArrayList<>();
 
