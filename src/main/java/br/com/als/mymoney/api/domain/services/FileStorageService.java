@@ -13,7 +13,7 @@ public interface FileStorageService {
 	File get(String registerCode, String fileName);
 
 	File getTemporaryInfo(String fileName);
-	
+
 	void deleteFile(String registerCode, String fileName);
 
 	void deleteFileIfExists(String registerCode, String fileName);
@@ -21,7 +21,7 @@ public interface FileStorageService {
 	void deleteFiles(String registerCode);
 
 	void makePermanent(String registerCode, String fileName);
-	
+
 	default String generateName(String originalFileName) {
 		return UUID.randomUUID().toString() + "_" + originalFileName;
 	}
@@ -33,5 +33,14 @@ public interface FileStorageService {
 		private String fileName;
 		private long size;
 		private String contentType;
+		private String url;
+
+		public boolean hasBytes() {
+			return this.inputStream != null;
+		}
+
+		public boolean hasUrl() {
+			return this.url != null;
+		}
 	}
 }

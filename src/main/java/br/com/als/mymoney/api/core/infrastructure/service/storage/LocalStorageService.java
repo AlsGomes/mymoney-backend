@@ -7,17 +7,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
+import br.com.als.mymoney.api.core.config.properties.MyMoneyProperty;
 import br.com.als.mymoney.api.domain.services.FileStorageService;
 
 public class LocalStorageService implements FileStorageService {
 
-	private static final String ROOT = "C:\\Users\\als_0\\Downloads\\docs\\";
+	@Autowired
+	private MyMoneyProperty properties;
 
 	@Override
 	public File save(FileStorageService.File file) {
-		var fullPath = ROOT + file.getFileName();
+		var fullPath = getRoot() + file.getFileName();
 
 		var outputFile = new java.io.File(fullPath);
 
@@ -34,7 +37,7 @@ public class LocalStorageService implements FileStorageService {
 
 	@Override
 	public File get(String registerCode, String fileName) {
-		var fullPath = ROOT + registerCode + "\\" + fileName;
+		var fullPath = getRoot() + registerCode + "/" + fileName;
 
 		try {
 			var file = new java.io.File(fullPath);
@@ -83,7 +86,7 @@ public class LocalStorageService implements FileStorageService {
 
 	@Override
 	public FileStorageService.File getTemporaryInfo(String fileName) {
-		var fullPath = ROOT + fileName;
+		var fullPath = getRoot() + fileName;
 
 		try {
 			var file = new java.io.File(fullPath);
@@ -122,7 +125,7 @@ public class LocalStorageService implements FileStorageService {
 
 	@Override
 	public void deleteFiles(String registerCode) {
-		var folder = new java.io.File(ROOT + registerCode);
+		var folder = new java.io.File(getRoot() + registerCode);
 	
 		if (!folder.exists())
 			return;
@@ -136,7 +139,7 @@ public class LocalStorageService implements FileStorageService {
 
 	@Override
 	public void deleteFile(String registerCode, String fileName) {
-		var file = new java.io.File(ROOT + registerCode + "\\" + fileName);
+		var file = new java.io.File(getRoot() + registerCode + "/" + fileName);
 	
 		try {
 			if (!file.exists())
@@ -154,7 +157,7 @@ public class LocalStorageService implements FileStorageService {
 
 	@Override
 	public void deleteFileIfExists(String registerCode, String fileName) {
-		var file = new java.io.File(ROOT + registerCode + "\\" + fileName);
+		var file = new java.io.File(getRoot() + registerCode + "/" + fileName);
 	
 		if (!file.exists())
 			return;
@@ -168,7 +171,7 @@ public class LocalStorageService implements FileStorageService {
 
 	@Override
 	public void makePermanent(String registerCode, String fileName) {
-		var fullPath = ROOT + fileName;
+		var fullPath = getRoot() + fileName;
 		var tempFile = new java.io.File(fullPath);
 	
 		try {
@@ -181,13 +184,13 @@ public class LocalStorageService implements FileStorageService {
 					String.format("Erro ao buscar o arquivo %s, enquanto tentava tornar permanente", fullPath), e);
 		}
 	
-		var outFolder = ROOT + registerCode;
+		var outFolder = getRoot() + registerCode;
 		try (InputStream in = new FileInputStream(tempFile)) {
 			var outFile = new java.io.File(outFolder);
 			if (!outFile.exists())
 				outFile.mkdirs();
 	
-			try (OutputStream out = new FileOutputStream(outFolder + "\\" + fileName)) {
+			try (OutputStream out = new FileOutputStream(outFolder + "/" + fileName)) {
 				out.write(in.readAllBytes());
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -201,5 +204,9 @@ public class LocalStorageService implements FileStorageService {
 		}
 	
 		tempFile.delete();
+	}
+	
+	private String getRoot() {
+		return properties.getStorage().getLocal().getRoot() + "/";
 	}
 }

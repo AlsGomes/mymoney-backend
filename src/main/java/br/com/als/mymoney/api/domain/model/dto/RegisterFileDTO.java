@@ -40,6 +40,7 @@ public class RegisterFileDTO {
 	private String fileName;
 	private long size;
 	private String contentType;
+	private String url;
 
 	public RegisterFileDTO(RegisterFile registerFile) {
 		this.fileName = registerFile.getFileName();
@@ -52,5 +53,6 @@ public class RegisterFileDTO {
 		this.fileName = file.getFileName();
 		this.size = file.getSize();
 		this.contentType = file.getContentType();
+		this.url = file.getUrl() == null ? null : file.getUrl();
 	}
 }

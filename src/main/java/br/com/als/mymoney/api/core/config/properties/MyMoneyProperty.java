@@ -3,6 +3,8 @@ package br.com.als.mymoney.api.core.config.properties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import com.amazonaws.regions.Regions;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +15,7 @@ public class MyMoneyProperty {
 
 	private final Security security = new Security();
 	private final Mail mail = new Mail();
+	private final Storage storage = new Storage();
 
 	@Setter
 	@Getter
@@ -35,4 +38,34 @@ public class MyMoneyProperty {
 			FAKE, SMTP
 		}
 	}
+
+	@Setter
+	@Getter
+	public static class Storage {
+		private ImplType impl = ImplType.LOCAL;
+
+		private final S3 s3 = new S3();
+		private final Local local = new Local();
+
+		public enum ImplType {
+			S3, LOCAL
+		}
+
+		@Getter
+		@Setter
+		public static class S3 {
+			private String accessKeyId;
+			private String secretAccessKey;
+			private String bucket;
+			private Regions region;
+			private String root;
+		}
+
+		@Getter
+		@Setter
+		public static class Local {
+			private String root;
+		}
+	}
+
 }

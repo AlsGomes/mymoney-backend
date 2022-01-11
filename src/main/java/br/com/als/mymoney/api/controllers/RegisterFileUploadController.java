@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -56,7 +57,7 @@ public class RegisterFileUploadController {
 					MediaType.IMAGE_JPEG_VALUE,
 					MediaType.IMAGE_PNG_VALUE, 
 					MediaType.APPLICATION_PDF_VALUE })
-	public ResponseEntity<byte[]> getFile(
+	public ResponseEntity<?> getFile(
 			@PathVariable String registerCode, 
 			@PathVariable String fileName)
 			throws IOException {
@@ -64,10 +65,18 @@ public class RegisterFileUploadController {
 		registerService.findRegisterFileByFileName(registerCode, fileName);		
 		
 		var file = service.get(registerCode, fileName);
-		return ResponseEntity
-				.ok()
-				.header(HttpHeaders.CONTENT_TYPE, file.getContentType())
-				.body(file.getInputStream().readAllBytes());
+		
+		if (file.hasBytes()) {
+			return ResponseEntity
+					.ok()
+					.header(HttpHeaders.CONTENT_TYPE, file.getContentType())
+					.body(file.getInputStream().readAllBytes());
+		} else {
+			return ResponseEntity
+					.status(HttpStatus.FOUND)
+					.header(HttpHeaders.LOCATION, file.getUrl())
+					.build();
+		}
 	}
 	
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and hasAuthority('SCOPE_read')")
