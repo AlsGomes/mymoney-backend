@@ -2,6 +2,7 @@ package br.com.als.mymoney.api.core.config;
 
 import java.util.Properties;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,7 +46,7 @@ public class MailConfig {
 		case SMTP:
 			return new SmtpSendMailService();
 		default:
-			return null;
+			throw new NotImplementedException("application.properties has a wrong implementation of mail service");
 		}
 	}
 }
