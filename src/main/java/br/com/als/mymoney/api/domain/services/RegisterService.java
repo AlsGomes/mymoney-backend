@@ -131,8 +131,10 @@ public class RegisterService {
 
 		final var category = findCategory(objDTO.getCategory().getCode());
 		final var newRegister = assembler.toRegister(objDTO);
+		
+		final boolean hasFiles = !objDTO.getFiles().isEmpty();
 
-		if (!objDTO.getFiles().isEmpty()) {
+		if (hasFiles) {
 			List<RegisterFile> files = objDTO.getFiles().stream()
 					.map(this::getTemporaryFile)
 					.collect(Collectors.toList());
@@ -147,7 +149,8 @@ public class RegisterService {
 		var savedRegister = repository.save(newRegister);
 		repository.flush();
 		
-		makePermanent(savedRegister.getFiles());
+		if (hasFiles)
+			makePermanent(savedRegister.getFiles());
 
 		var registerDTO = new RegisterDTO(savedRegister);
 		return registerDTO;
