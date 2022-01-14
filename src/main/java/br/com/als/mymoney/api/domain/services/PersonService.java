@@ -96,7 +96,7 @@ public class PersonService {
 		assembler.toPerson(objDTOUpdate, obj);
 
 		obj = repository.save(obj);
-		PersonDTO objDTO = disassembler.toPersonDTO(obj);
+		PersonDTO objDTO = new PersonDTO(obj);
 		return objDTO;
 	}
 
