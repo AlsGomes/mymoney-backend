@@ -83,6 +83,7 @@ public class RegisterService {
 		return listDTO;
 	}
 
+	@Transactional
 	public List<RegisterDTO> findOverdueRegisters() {
 		List<Register> list = repository.findByDueDateLessThanEqualAndPaymentDateIsNullOrderByType(LocalDate.now());
 		List<RegisterDTO> listDTO = list.stream().map(RegisterDTO::new).collect(Collectors.toList());
