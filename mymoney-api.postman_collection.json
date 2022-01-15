@@ -1,0 +1,1211 @@
+{
+	"info": {
+		"_postman_id": "8a574953-2d46-4d1d-b1ad-ad69ed84d56c",
+		"name": "mymoney-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Security",
+			"item": [
+				{
+					"name": "Get Access Token",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "@ngul@r0",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "angular",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "admin@algamoney.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{localhost}}/oauth/token",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"oauth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check Token",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "@ngul@r0",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "angular",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{localhost}}/oauth/check_token",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"oauth",
+								"check_token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Access Token With Refresh Token",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "@ngul@r0",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "angular",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "refresh_token",
+									"value": "g_16eJAZuNIzK8WOQx0R4oX77QY",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "grant_type",
+									"value": "refresh_token",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{localhost}}/oauth/token",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"oauth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Clear Refresh Token Cookie",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/tokens/revoke",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"tokens",
+								"revoke"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "All Categories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/categories",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Category By Code",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzkwMjA3NDgsInVzZXJfbmFtZSI6ImFkbWluQGFsZ2Ftb25leS5jb20iLCJhdXRob3JpdGllcyI6WyJST0xFX0FETUlOIl0sImp0aSI6ImtmZV9QS0JRVUZpUk51OF8wUS00aXpHdFh4ZyIsImNsaWVudF9pZCI6ImFuZ3VsYXIiLCJzY29wZSI6WyJyZWFkIiwid3JpdGUiXX0.g6gM82R89Bcz04kvYlLVN_ACftImBUP5w2KGoMgnd78",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/categories/2d78b3e2-2b61-4c45-9a75-eb79f7b6db81",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"categories",
+								"2d78b3e2-2b61-4c45-9a75-eb79f7b6db81"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert new Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzkwMjA3NDgsInVzZXJfbmFtZSI6ImFkbWluQGFsZ2Ftb25leS5jb20iLCJhdXRob3JpdGllcyI6WyJST0xFX0FETUlOIl0sImp0aSI6ImtmZV9QS0JRVUZpUk51OF8wUS00aXpHdFh4ZyIsImNsaWVudF9pZCI6ImFuZ3VsYXIiLCJzY29wZSI6WyJyZWFkIiwid3JpdGUiXX0.g6gM82R89Bcz04kvYlLVN_ACftImBUP5w2KGoMgnd78",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Roupas\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/categories",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Person",
+			"item": [
+				{
+					"name": "All Persons",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/persons",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"persons"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Person By Code",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/persons/:code",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"persons",
+								":code"
+							],
+							"variable": [
+								{
+									"key": "code",
+									"value": "aa2310d7-e159-42f9-933c-c15048588d2b"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Persons (OAUTH2)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/persons/filter?name=r&size=6&page=0",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"persons",
+								"filter"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "r"
+								},
+								{
+									"key": "size",
+									"value": "6"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Person By Code",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/persons/:personCode",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"persons",
+								":personCode"
+							],
+							"variable": [
+								{
+									"key": "personCode",
+									"value": "aa2310d7-e159-42f9-933c-c15048588d2b"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert new Person",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"bolete\",    \r\n    \"address\": {\r\n        \"street\": \"Rua Barão Barroso do Amazonas\",\r\n        \"num\": \"50\",\r\n        \"complement\": \"Bloco E Apto. 12\",\r\n        \"district\": \"Prestes Maia\",\r\n        \"postalCode\": \"01228200\",\r\n        \"city\": \"São Paulo\",\r\n        \"state\": \"SP\"\r\n    },\r\n    \"contacts\": [\r\n        {\r\n            \"name\": \"Snow\",\r\n            \"email\": \"snow@algamoney.com\",\r\n            \"telephone\": \"(11) 97494-8995\"\r\n        },\r\n        {\r\n            \"name\": \"Bolão\",\r\n            \"email\": \"bolao@algamoney.com\",\r\n            \"telephone\": \"(11) 97494-8995\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/persons",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"persons"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Person without Address",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Cristina\",\r\n    \"active\":true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/persons/:code",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"persons",
+								":code"
+							],
+							"variable": [
+								{
+									"key": "code",
+									"value": "d757fb84-fcd2-43d8-b2d8-9be5f756938b"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Person Address",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"address\": {\r\n        \"street\": \"Rua Barão Barroso do Amazonas\",\r\n        \"num\": \"50\",\r\n        \"complement\": \"Bloco B\",\r\n        \"district\": \"Maia\",\r\n        \"postalCode\": \"08472721\",\r\n        \"state\": \"SP\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/persons/:code/address",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"persons",
+								":code",
+								"address"
+							],
+							"variable": [
+								{
+									"key": "code",
+									"value": "d757fb84-fcd2-43d8-b2d8-9be5f756938b"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Person Contacts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"contacts\": [\r\n        {\r\n            \"name\": \"Snow\",\r\n            \"email\": \"snow@algamoney.com\",\r\n            \"telephone\": \"(11) 97494-8995\"\r\n        },\r\n        {\r\n            \"name\": \"Bolão\",\r\n            \"email\": \"bolao@algamoney.com\",\r\n            \"telephone\": \"(11) 97494-8995\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/persons/:code/contacts",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"persons",
+								":code",
+								"contacts"
+							],
+							"variable": [
+								{
+									"key": "code",
+									"value": "d757fb84-fcd2-43d8-b2d8-9be5f756938b"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Toggle Activation of a Person",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "false",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/persons/:personCode/active",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"persons",
+								":personCode",
+								"active"
+							],
+							"variable": [
+								{
+									"key": "personCode",
+									"value": "aa2310d7-e159-42f9-933c-c15048588d2b"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Register",
+			"item": [
+				{
+					"name": "Statistics",
+					"item": [
+						{
+							"name": "By Category",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}/registers/statistics/by-category?date=2017-04-01",
+									"host": [
+										"{{localhost}}"
+									],
+									"path": [
+										"registers",
+										"statistics",
+										"by-category"
+									],
+									"query": [
+										{
+											"key": "date",
+											"value": "2017-04-01"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "By Day",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}/registers/statistics/by-day?date=2017-04-01",
+									"host": [
+										"{{localhost}}"
+									],
+									"path": [
+										"registers",
+										"statistics",
+										"by-day"
+									],
+									"query": [
+										{
+											"key": "date",
+											"value": "2017-04-01"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Reports",
+					"item": [
+						{
+							"name": "By Person",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}/registers/reports/by-person?dateFrom=2017-01-01&dateUntil=2017-12-31",
+									"host": [
+										"{{localhost}}"
+									],
+									"path": [
+										"registers",
+										"reports",
+										"by-person"
+									],
+									"query": [
+										{
+											"key": "dateFrom",
+											"value": "2017-01-01"
+										},
+										{
+											"key": "dateUntil",
+											"value": "2017-12-31"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "File Upload/Download",
+					"item": [
+						{
+							"name": "Upload File",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/C:/Users/als_0/Downloads/comprovante.pdf"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{localhost}}/registers/attachment",
+									"host": [
+										"{{localhost}}"
+									],
+									"path": [
+										"registers",
+										"attachment"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Download File",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "image/jpeg",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept",
+										"value": "image/png",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept",
+										"value": "application/pdf",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{localhost}}/registers/:registerCode/attachments/:fileName",
+									"host": [
+										"{{localhost}}"
+									],
+									"path": [
+										"registers",
+										":registerCode",
+										"attachments",
+										":fileName"
+									],
+									"variable": [
+										{
+											"key": "registerCode",
+											"value": "906a3d29-5817-48cc-8ab2-07c54b5de577"
+										},
+										{
+											"key": "fileName",
+											"value": "670fe562-9918-44ef-b708-1354210bb025_comprovante.pdf"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "All Registers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/registers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"registers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register By Code",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/registers/:code",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"registers",
+								":code"
+							],
+							"variable": [
+								{
+									"key": "code",
+									"value": "21ffe9d3-792d-4609-91d8-a7ea92b4cbaa"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Registers (OAUTH2)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/registers/filter?size=6&page=0&summary",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"registers",
+								"filter"
+							],
+							"query": [
+								{
+									"key": "description",
+									"value": "ha",
+									"disabled": true
+								},
+								{
+									"key": "dueDateFrom",
+									"value": "2017-03-01",
+									"disabled": true
+								},
+								{
+									"key": "dueDateUntil",
+									"value": "2017-03-31",
+									"disabled": true
+								},
+								{
+									"key": "size",
+									"value": "6"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "summary",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Registers (Basic Auth)",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin@algamoney.com",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/registers/filter?summary",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"registers",
+								"filter"
+							],
+							"query": [
+								{
+									"key": "description",
+									"value": "ha",
+									"disabled": true
+								},
+								{
+									"key": "dueDateFrom",
+									"value": "2017-03-01",
+									"disabled": true
+								},
+								{
+									"key": "dueDateUntil",
+									"value": "2017-03-31",
+									"disabled": true
+								},
+								{
+									"key": "size",
+									"value": "6",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "summary",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert new Register (OAUTH2)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"Móveis planejados\",\r\n    \"dueDate\": \"2021-03-01\",\r\n    \"value\": 47000,\r\n    \"obs\": \"Comprado na Italínea\",\r\n    \"type\": \"EXPENSE\",\r\n    \"category\": {\r\n        \"code\": \"ee1f7943-8412-42c8-9c2c-711333464fab\"\r\n    },\r\n    \"person\": {\r\n        \"code\": \"d757fb84-fcd2-43d8-b2d8-9be5f756938b\"\r\n    },\r\n    \"files\": [\r\n        \"670fe562-9918-44ef-b708-1354210bb025_comprovante.pdf\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/registers",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"registers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert new Register (Basic Auth)",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin@algamoney.com",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"Comida e areia para os gatos\",\r\n    \"dueDate\": \"2021-12-02\",\r\n    \"paymentDate\": \"2021-12-02\",\r\n    \"value\": 220.38,\r\n    \"obs\": \"Comprado no Pets\",\r\n    \"type\": \"EXPENSE\",\r\n    \"category\": {\r\n        \"code\": \"ee1f7943-8412-42c8-9c2c-711333464fab\"\r\n    },\r\n    \"person\": {\r\n        \"code\":\"d757fb84-fcd2-43d8-b2d8-9be5f756938b\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/registers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"registers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Register (OAUTH2)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"Móveis planejados\",\r\n    \"dueDate\": \"2021-03-01\",\r\n    \"paymentDate\": \"2021-03-01\",\r\n    \"value\": 47000,\r\n    \"obs\": \"Comprado na Italínea\",\r\n    \"type\": \"EXPENSE\",\r\n    \"category\": {\r\n        \"code\": \"ee1f7943-8412-42c8-9c2c-711333464fab\"\r\n    },\r\n    \"person\": {\r\n        \"code\": \"d757fb84-fcd2-43d8-b2d8-9be5f756938b\"\r\n    },\r\n    \"files\": [\r\n        {\r\n            \"code\": \"343d2d39-8236-4803-a4e4-27ade6679fb4\",\r\n            \"fileName\": \"343d2d39-8236-4803-a4e4-27ade6679fb4_nota.pdf\",\r\n            \"size\": 950621,\r\n            \"contentType\": \"application/pdf\"\r\n        },\r\n        {\r\n            \"fileName\": \"15bc3948-9d60-48e4-8e7d-cf6ea5cf4646_comprovante.pdf\",\r\n            \"size\": 950621,\r\n            \"contentType\": \"application/pdf\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/registers/:code",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"registers",
+								":code"
+							],
+							"variable": [
+								{
+									"key": "code",
+									"value": "21ffe9d3-792d-4609-91d8-a7ea92b4cbaa"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Register",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/registers/:code",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"registers",
+								":code"
+							],
+							"variable": [
+								{
+									"key": "code",
+									"value": "21ffe9d3-792d-4609-91d8-a7ea92b4cbaa"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

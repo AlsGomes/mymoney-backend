@@ -3,7 +3,6 @@ package br.com.als.mymoney.api.domain.services;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
@@ -11,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.als.mymoney.api.assemblers.PersonAssembler;
 import br.com.als.mymoney.api.controllers.utils.SimplePage;
@@ -38,6 +38,7 @@ public class PersonService {
 	@Autowired
 	private PersonAssembler assembler;
 
+	@Transactional(readOnly = true)
 	public PersonDTO findByCodeOrThrow(String code) {
 		if (code == null)
 			throw new ObjectNotFoundException("Pessoa não encontrada");
@@ -49,6 +50,7 @@ public class PersonService {
 		return objDTO;
 	}
 
+	@Transactional(readOnly = true)
 	public Person findByCodeOrThrowAsPerson(String code) {
 		if (code == null)
 			throw new ObjectNotFoundException("Pessoa não encontrada");
@@ -59,12 +61,14 @@ public class PersonService {
 		return obj;
 	}
 
+	@Transactional(readOnly = true)
 	public List<PersonDTO> findAll() {
 		var list = repository.findAll();
 		List<PersonDTO> listDTO = list.stream().map(PersonDTO::new).collect(Collectors.toList());
 		return listDTO;
 	}
 
+	@Transactional(readOnly = true)
 	public SimplePage<PersonDTO> search(String name, Pageable pageable) {
 		Page<Person> list = repository.findByNameContaining(name, pageable);
 		Page<PersonDTO> listDTO = list.map(PersonDTO::new);
@@ -84,7 +88,10 @@ public class PersonService {
 				.collect(Collectors.toList());
 		obj.getContacts().addAll(newContacts);
 
-		var savedPerson = repository.save(obj);
+		var savedPerson = repository.save(obj);	
+//		var fetchedPerson = findByCodeOrThrowAsPerson(savedPerson.getCode());
+//		System.out.println(fetchedPerson);
+//		PersonDTO objDTO = new PersonDTO(fetchedPerson);
 		PersonDTO objDTO = new PersonDTO(savedPerson);
 		return objDTO;
 	}

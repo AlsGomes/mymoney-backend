@@ -1,6 +1,8 @@
 package br.com.als.mymoney.api.domain.model;
 
 import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -11,14 +13,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
 @Setter
-@ToString
 @JsonInclude(Include.NON_NULL)
 @Embeddable
 public class Address {
@@ -38,9 +38,13 @@ public class Address {
 	@Size(min = 8, max = 8)
 	private String postalCode;
 
-	@Size(min = 2, max = 50)
-	private String city;
+	@ManyToOne
+	@JoinColumn(name = "id_city")
+	private City city;
 
-	@Size(min = 2, max = 50)
-	private String state;
+	@Override
+	public String toString() {
+		return "Address [street=" + street + ", num=" + num + ", complement=" + complement + ", district=" + district
+				+ ", postalCode=" + postalCode + ", city=" + city + "]";
+	}
 }

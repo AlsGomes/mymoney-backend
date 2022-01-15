@@ -18,11 +18,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
 @Entity
 @Table(name = "person")
 public class Person {
@@ -67,5 +65,11 @@ public class Person {
 
 	public Boolean isActive() {
 		return active;
+	}
+
+	@Override
+	public String toString() {
+		return "Person [id=" + id + ", code=" + code + ", name=" + name + ", active=" + active + ", address=" + address
+				+ ", contacts=" + contacts + "]";
 	}
 }

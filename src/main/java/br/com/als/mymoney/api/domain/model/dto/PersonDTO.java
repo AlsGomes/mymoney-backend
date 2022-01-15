@@ -15,14 +15,12 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
 @JsonInclude(Include.NON_NULL)
 public class PersonDTO {
 
@@ -52,4 +50,11 @@ public class PersonDTO {
 	public Boolean isActive() {
 		return active;
 	}
+
+	@Override
+	public String toString() {
+		return "PersonDTO [code=" + code + ", name=" + name + ", active=" + active + ", address=" + address
+				+ ", contacts=" + contacts + "]";
+	}
+
 }

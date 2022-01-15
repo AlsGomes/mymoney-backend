@@ -15,12 +15,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @NoArgsConstructor
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
 @Entity
 @Table(name = "contact")
 public class Contact {
@@ -58,5 +56,11 @@ public class Contact {
 	@PrePersist
 	private void setCode() {
 		this.code = UUID.randomUUID().toString();
+	}
+
+	@Override
+	public String toString() {
+		return "Contact [id=" + id + ", code=" + code + ", name=" + name + ", email=" + email + ", telephone="
+				+ telephone + "]";
 	}
 }
