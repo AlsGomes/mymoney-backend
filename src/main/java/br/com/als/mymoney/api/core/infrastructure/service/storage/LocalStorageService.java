@@ -21,16 +21,15 @@ public class LocalStorageService implements FileStorageService {
 	@Override
 	public File save(FileStorageService.File file) {
 		var fullPath = getRoot() + file.getFileName();
-
 		var outputFile = new java.io.File(fullPath);
+		if (!outputFile.getParentFile().exists())
+			outputFile.getParentFile().mkdirs();
 
 		try (OutputStream output = new FileOutputStream(outputFile)) {
-			if (!outputFile.getParentFile().exists())
-				outputFile.getParentFile().mkdirs();
-
 			output.write(file.getInputStream().readAllBytes());
 			return file;
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new StorageException("Erro ao tentar fazer upload de arquivo", e);
 		}
 	}
