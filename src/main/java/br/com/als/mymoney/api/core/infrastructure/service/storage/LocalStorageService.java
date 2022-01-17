@@ -46,6 +46,7 @@ public class LocalStorageService implements FileStorageService {
 
 			var name = file.getName();
 			var size = file.length();
+			var url = file.getPath().replace("\\", "/");
 			var extension = name.substring(name.lastIndexOf(".")).toLowerCase();
 			var contentType = "";
 
@@ -77,6 +78,7 @@ public class LocalStorageService implements FileStorageService {
 					.fileName(name)
 					.size(size)
 					.contentType(contentType)
+					.url(url)
 					.build();
 		} catch (FileNotFoundException e) {
 			throw new StorageException(String.format("Erro ao buscar o arquivo %s, enquanto tentava buscar", fullPath),
