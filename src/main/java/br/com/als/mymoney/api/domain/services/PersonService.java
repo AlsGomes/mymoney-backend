@@ -16,6 +16,7 @@ import br.com.als.mymoney.api.assemblers.PersonAssembler;
 import br.com.als.mymoney.api.controllers.utils.SimplePage;
 import br.com.als.mymoney.api.disassemblers.PersonDisassembler;
 import br.com.als.mymoney.api.domain.model.Address;
+import br.com.als.mymoney.api.domain.model.City;
 import br.com.als.mymoney.api.domain.model.Contact;
 import br.com.als.mymoney.api.domain.model.Person;
 import br.com.als.mymoney.api.domain.model.dto.PersonDTO;
@@ -23,6 +24,7 @@ import br.com.als.mymoney.api.domain.model.dto.PersonDTOInsert;
 import br.com.als.mymoney.api.domain.model.dto.PersonDTOUpdate;
 import br.com.als.mymoney.api.domain.model.dto.PersonDTOUpdateAddress;
 import br.com.als.mymoney.api.domain.model.dto.PersonDTOUpdateContacts;
+import br.com.als.mymoney.api.domain.repositories.CityRepository;
 import br.com.als.mymoney.api.domain.repositories.PersonRepository;
 import br.com.als.mymoney.api.domain.services.exceptions.ObjectNotFoundException;
 
@@ -31,6 +33,9 @@ public class PersonService {
 
 	@Autowired
 	private PersonRepository repository;
+	
+	@Autowired
+	private CityRepository cityRepository;
 
 	@Autowired
 	private PersonDisassembler disassembler;
@@ -81,17 +86,19 @@ public class PersonService {
 	public PersonDTO saveNew(PersonDTOInsert objDTOInsert) {
 		if (objDTOInsert.getActive() == null)
 			objDTOInsert.setActive(true);
-
+		
 		final Person obj = assembler.toPerson(objDTOInsert);
+
+		boolean hasAddress = obj.getAddress() != null;
+		if (hasAddress)
+			obj.getAddress().setCity(findCityThroughAddress(obj.getAddress()));
+		
 		var newContacts = objDTOInsert.getContacts().stream()
 				.map(contact -> new Contact(null, contact.getName(), contact.getEmail(), contact.getTelephone(), obj))
 				.collect(Collectors.toList());
 		obj.getContacts().addAll(newContacts);
 
 		var savedPerson = repository.save(obj);	
-//		var fetchedPerson = findByCodeOrThrowAsPerson(savedPerson.getCode());
-//		System.out.println(fetchedPerson);
-//		PersonDTO objDTO = new PersonDTO(fetchedPerson);
 		PersonDTO objDTO = new PersonDTO(savedPerson);
 		return objDTO;
 	}
@@ -111,15 +118,19 @@ public class PersonService {
 	public PersonDTO updateAddress(PersonDTOUpdateAddress objDTOUpdate) {
 		Person obj = findByCodeOrThrowAsPerson(objDTOUpdate.getCode());
 
+		boolean hasAddress = objDTOUpdate.getAddress() != null;
+
 		// Implementado com BeanUtils, pois, não é necessário criar DTOs para essa entidade Embedded
 		// CopyProperties satifaz a necessidade
-		if (objDTOUpdate.getAddress() == null) {
+		if (!hasAddress) {
 			obj.setAddress(null);
 		} else if (obj.getAddress() == null) {
 			obj.setAddress(new Address());
 			BeanUtils.copyProperties(objDTOUpdate.getAddress(), obj.getAddress());
+			obj.getAddress().setCity(findCityThroughAddress(objDTOUpdate.getAddress()));
 		} else {
 			BeanUtils.copyProperties(objDTOUpdate.getAddress(), obj.getAddress());
+			obj.getAddress().setCity(findCityThroughAddress(objDTOUpdate.getAddress()));
 		}
 
 		Person updatedObj = repository.save(obj);
@@ -154,5 +165,21 @@ public class PersonService {
 	public void deleteByCode(String code) {
 		Person obj = findByCodeOrThrowAsPerson(code);
 		repository.delete(obj);
+	}
+	
+	@Transactional(readOnly = true)
+	private City findCityThroughAddress(Address address) {
+		boolean hasCityId = 
+				address.getCity() != null
+				&& address.getCity().getId() != null;
+
+		if (!hasCityId)
+			return null;
+
+		var cityId = address.getCity().getId();
+		var city = cityRepository.findById(cityId)
+				.orElseThrow(() -> new ObjectNotFoundException("Cidade não encontrada"));
+
+		return city;
 	}
 }
