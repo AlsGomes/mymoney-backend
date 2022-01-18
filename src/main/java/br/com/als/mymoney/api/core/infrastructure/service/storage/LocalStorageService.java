@@ -46,7 +46,7 @@ public class LocalStorageService implements FileStorageService {
 
 			var name = file.getName();
 			var size = file.length();
-			var url = file.getPath().replace("\\", "/");
+			var url = "file:///" + file.getPath().replace("\\", "/");
 			var extension = name.substring(name.lastIndexOf(".")).toLowerCase();
 			var contentType = "";
 
