@@ -64,8 +64,7 @@ public class RegisterFileUploadController {
 		
 		registerService.findRegisterFileByFileName(registerCode, fileName);		
 		
-		var file = service.get(registerCode, fileName);
-		
+		var file = service.get(registerCode, fileName);		
 		if (file.hasBytes()) {
 			return ResponseEntity
 					.ok()
@@ -81,16 +80,18 @@ public class RegisterFileUploadController {
 	
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and hasAuthority('SCOPE_read')")
 	@GetMapping(path = "/{registerCode}/attachments/{fileName}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<RegisterFileDTO> getFileJson(
+	public ResponseEntity<FileStorageService.File> getFileJson(
 			@PathVariable String registerCode, 
 			@PathVariable String fileName)
 			throws IOException {
 		
-		var obj = registerService.findRegisterFileByFileName(registerCode, fileName);		
+		registerService.findRegisterFileByFileName(registerCode, fileName);
+		var file = service.get(registerCode, fileName);	
+		file.setInputStream(null);
 		
 		return ResponseEntity
 				.ok()
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-				.body(obj);
+				.body(file);
 	}
 }

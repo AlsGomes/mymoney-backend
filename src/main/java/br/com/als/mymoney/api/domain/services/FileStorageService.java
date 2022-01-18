@@ -3,8 +3,12 @@ package br.com.als.mymoney.api.domain.services;
 import java.io.InputStream;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 public interface FileStorageService {
 
@@ -25,15 +29,18 @@ public interface FileStorageService {
 	default String generateName(String originalFileName) {
 		return UUID.randomUUID().toString() + "_" + originalFileName;
 	}
-
+	
 	@Getter
 	@Builder
-	class File {
-		private InputStream inputStream;
+	@JsonInclude(Include.NON_NULL)
+	class File {		
 		private String fileName;
 		private long size;
 		private String contentType;
 		private String url;
+
+		@Setter
+		private InputStream inputStream;
 
 		public boolean hasBytes() {
 			return this.inputStream != null;
@@ -41,6 +48,12 @@ public interface FileStorageService {
 
 		public boolean hasUrl() {
 			return this.url != null;
+		}
+
+		@Override
+		public String toString() {
+			return "File [fileName=" + fileName + ", size=" + size + ", contentType=" + contentType + ", url=" + url
+					+ "]";
 		}
 	}
 }
