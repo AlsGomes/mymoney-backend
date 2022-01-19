@@ -22,9 +22,20 @@ public class MyMoneyProperty {
 	@Setter
 	@Getter
 	public static class Security {
+		private Keystore keystore = new Keystore();
+
 		private String allowedOrigins;
 		private List<String> allowedRedirects;
 		private String authServerUrl;
+
+		@Getter
+		@Setter
+		public static class Keystore {
+			private String path;
+			private String keyPassword;
+			private String storePassword;
+			private String keyPairAlias;
+		}
 	}
 
 	@Setter

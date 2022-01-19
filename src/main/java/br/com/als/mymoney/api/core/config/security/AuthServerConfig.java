@@ -1,5 +1,7 @@
 package br.com.als.mymoney.api.core.config.security;
 
+import java.io.InputStream;
+import java.security.KeyStore;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -12,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -32,11 +35,8 @@ import org.springframework.security.oauth2.server.authorization.config.ProviderS
 import org.springframework.security.oauth2.server.authorization.config.TokenSettings;
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.KeyUse;
 import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.gen.RSAKeyGenerator;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 
@@ -120,13 +120,24 @@ public class AuthServerConfig {
     }
 
     @Bean
-    public JWKSet jwkSet() throws JOSEException {
-        RSAKey rsa = new RSAKeyGenerator(2048)
-                .keyUse(KeyUse.SIGNATURE)
-                .keyID(UUID.randomUUID().toString())
-                .generate();
+    public JWKSet jwkSet() throws Exception {
+		var keystorePath = properties.getSecurity().getKeystore().getPath();
+		var keypairAlias = properties.getSecurity().getKeystore().getKeyPairAlias();
+		var keyPass = properties.getSecurity().getKeystore().getKeyPassword();
+		var storePass = properties.getSecurity().getKeystore().getStorePassword();
 
-        return new JWKSet(rsa);
+    	final InputStream inputStream = new ClassPathResource(keystorePath).getInputStream();
+
+        final KeyStore keyStore = KeyStore.getInstance("JKS");
+        keyStore.load(inputStream, storePass.toCharArray());
+
+        RSAKey rsaKey = RSAKey.load(
+                keyStore,
+                keypairAlias,
+                keyPass.toCharArray()
+        );
+
+        return new JWKSet(rsaKey);
     }
 
     @Bean
