@@ -74,11 +74,6 @@ public class ResourceServerConfig {
 		return jwtAuthenticationConverter;
 	}
 	
-//	@Override
-//	public void configure(WebSecurity web) throws Exception {
-//		web.ignoring().antMatchers(HttpMethod.OPTIONS, "/oauth/token");
-//	}
-
 	@Bean
 	public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {		
 		return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);

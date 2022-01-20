@@ -24,7 +24,7 @@ public class MyMoneyProperty {
 	public static class Security {
 		private Keystore keystore = new Keystore();
 
-		private String allowedOrigins;
+		private List<String> allowedOrigins;
 		private List<String> allowedRedirects;
 		private String authServerUrl;
 

@@ -65,8 +65,10 @@ public class AuthServerConfig {
                 .scope("read")
                 .scope("write")
                 .tokenSettings(TokenSettings.builder()
-                        .accessTokenTimeToLive(Duration.ofHours(6))
-                        .refreshTokenTimeToLive(Duration.ofDays(15))
+                        .accessTokenTimeToLive(Duration.ofMinutes(1)) // test
+                        .refreshTokenTimeToLive(Duration.ofDays(15)) // test
+//                        .accessTokenTimeToLive(Duration.ofHours(6))
+//                        .refreshTokenTimeToLive(Duration.ofDays(15))
                         .build())
                 .clientSettings(ClientSettings.builder()
                                 .requireAuthorizationConsent(true)
@@ -100,7 +102,10 @@ public class AuthServerConfig {
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain authServerFilterChain(HttpSecurity http) throws Exception {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-        return http.formLogin(Customizer.withDefaults()).build();
+		return http.cors()
+				.and()
+					.formLogin(Customizer.withDefaults())
+				.build();
     }
 
     @Bean
