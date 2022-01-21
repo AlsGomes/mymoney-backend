@@ -65,10 +65,10 @@ public class AuthServerConfig {
                 .scope("read")
                 .scope("write")
                 .tokenSettings(TokenSettings.builder()
-                        .accessTokenTimeToLive(Duration.ofMinutes(1)) // test
-                        .refreshTokenTimeToLive(Duration.ofDays(15)) // test
-//                        .accessTokenTimeToLive(Duration.ofHours(6))
-//                        .refreshTokenTimeToLive(Duration.ofDays(15))
+//                        .accessTokenTimeToLive(Duration.ofMinutes(1)) // test
+//                        .refreshTokenTimeToLive(Duration.ofDays(15)) // test
+                        .accessTokenTimeToLive(Duration.ofHours(6))
+                        .refreshTokenTimeToLive(Duration.ofDays(15))
                         .build())
                 .clientSettings(ClientSettings.builder()
                                 .requireAuthorizationConsent(true)
