@@ -1,5 +1,7 @@
 package br.com.als.mymoney.api.core.config.properties;
 
+import java.util.List;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +22,20 @@ public class MyMoneyProperty {
 	@Setter
 	@Getter
 	public static class Security {
-		private boolean enableHttps;
-		private String allowedOrigins;
+		private Keystore keystore = new Keystore();
+
+		private List<String> allowedOrigins;
+		private List<String> allowedRedirects;
+		private String authServerUrl;
+
+		@Getter
+		@Setter
+		public static class Keystore {
+			private String path;
+			private String keyPassword;
+			private String storePassword;
+			private String keyPairAlias;
+		}
 	}
 
 	@Setter
