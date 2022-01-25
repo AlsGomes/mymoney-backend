@@ -16,15 +16,18 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwsEncoder;
+import org.springframework.security.oauth2.server.authorization.InMemoryOAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.JwtEncodingContext;
+import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenCustomizer;
 import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
@@ -33,6 +36,7 @@ import org.springframework.security.oauth2.server.authorization.config.ClientSet
 import org.springframework.security.oauth2.server.authorization.config.ProviderSettings;
 import org.springframework.security.oauth2.server.authorization.config.TokenSettings;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -50,6 +54,8 @@ public class AuthServerConfig {
 
 	@Autowired
 	private MyMoneyProperty properties;
+	
+	private static final String CUSTOM_CONSENT_PAGE_URI = "/oauth2/consent";
 
 	@Bean
 	public RegisteredClientRepository registeredClientRepository() {
@@ -100,12 +106,43 @@ public class AuthServerConfig {
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain authServerFilterChain(HttpSecurity http) throws Exception {
-        OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-		return http.cors()
-				.and()
-					.formLogin(c -> c.loginPage("/login").permitAll())
-				.build();
-    }
+    	OAuth2AuthorizationServerConfigurer<HttpSecurity> authorizationServerConfigurer =
+				new OAuth2AuthorizationServerConfigurer<>();
+    	
+    	authorizationServerConfigurer
+		.authorizationEndpoint(authorizationEndpoint ->
+				authorizationEndpoint.consentPage(CUSTOM_CONSENT_PAGE_URI));
+    	
+    	RequestMatcher endpointsMatcher = authorizationServerConfigurer
+				.getEndpointsMatcher();
+    	
+    	http
+		.requestMatcher(endpointsMatcher)
+		.authorizeRequests(authorizeRequests ->
+				authorizeRequests.antMatchers("/login")
+						.permitAll()
+						.anyRequest().authenticated()
+		)
+		.csrf(csrf -> csrf.ignoringRequestMatchers(endpointsMatcher))
+		.apply(authorizationServerConfigurer)
+		.and()
+			.cors();
+    	
+    	return http
+    			.formLogin(c -> c.loginPage("/login").permitAll())
+    			.build();
+
+//    	OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+//		return http.cors()
+//				.and()
+//					.formLogin(c -> c.loginPage("/login").permitAll())
+//				.build();
+	}
+    
+    @Bean
+	public OAuth2AuthorizationConsentService authorizationConsentService() {
+		return new InMemoryOAuth2AuthorizationConsentService();
+	}
 
     @Bean
     public OAuth2TokenCustomizer<JwtEncodingContext> jwtBuildCustomizer() {
