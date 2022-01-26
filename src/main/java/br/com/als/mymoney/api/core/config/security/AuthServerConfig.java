@@ -16,7 +16,6 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.core.GrantedAuthority;
@@ -131,12 +130,6 @@ public class AuthServerConfig {
     	return http
     			.formLogin(c -> c.loginPage("/login").permitAll())
     			.build();
-
-//    	OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-//		return http.cors()
-//				.and()
-//					.formLogin(c -> c.loginPage("/login").permitAll())
-//				.build();
 	}
     
     @Bean
